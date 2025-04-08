@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -10,5 +11,18 @@
   "description": "",
   "devDependencies": {
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.1",
+    "@types/mongoose": "^5.11.97",
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "http-status-codes": "^2.3.0",
+    "mongoose": "^8.13.2",
+    "nodemon": "^3.1.9",
+    "ts-node-dev": "^2.0.0",
+    "tsconfig-paths": "^4.2.0"
   }
 }
