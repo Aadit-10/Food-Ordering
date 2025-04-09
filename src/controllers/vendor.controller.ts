@@ -1,22 +1,25 @@
 import { Request, Response } from "express";
-import { VendorService } from "../services/vendor.service";
-import { CreateVendorInput } from "../dto";
+import { VendorService } from "../services";
+import { StatusCodes } from "http-status-codes";
+import { messages } from "../common/constants";
+import { sendResponse } from "../utils";
 
 export const CreateVendor = async (req: Request, res: Response): Promise<any> => {
     try {
-        // await VendorService.createVendor(req);
-        const { name, phone, address, email, password, pincode, foodTypes } = <CreateVendorInput>req.body;
-        return res.json({ name, phone, address, email, password, pincode, foodTypes })
-
+        const createdVendor = await VendorService.createVendor(req);
+        return sendResponse(res, StatusCodes.OK, messages.CREATE_VENDOR, { createdVendor })
     } catch (error) {
-
+        return sendResponse(res, error.statusCode, error.message)
     }
 };
 
 export const GetVendors = async (req: Request, res: Response): Promise<any> => {
     try {
+        const vendors = await VendorService.getVendors(req);
+        return sendResponse(res, StatusCodes.OK, messages.GET_VENDORS, { vendors })
 
     } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
 
     }
 };
