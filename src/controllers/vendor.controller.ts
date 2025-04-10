@@ -26,8 +26,9 @@ export const GetVendors = async (req: Request, res: Response): Promise<any> => {
 
 export const GetVendorById = async (req: Request, res: Response): Promise<any> => {
     try {
-
+        const vendor = await VendorService.getVendorById(req);
+        return sendResponse(res, StatusCodes.OK, messages.CREATE_VENDOR, { vendor })
     } catch (error) {
-
+        return sendResponse(res, error.statusCode, error.message)
     }
 };

@@ -6,6 +6,7 @@ interface VendorDoc extends Document {
     phone: string,
     address: string,
     email: string,
+    salt: string,
     password: string,
     pincode: string,
     foodTypes: [string],
@@ -19,6 +20,7 @@ const VendorSchema = new Schema({
     phone: { type: String, required: true },
     address: { type: String, required: true },
     email: { type: String, required: true },
+    salt: { type: String, required: true },
     password: { type: String, required: true },
     pincode: { type: String, required: true },
     status: { type: String, default: 'A' },
@@ -26,6 +28,13 @@ const VendorSchema = new Schema({
     coverImage: { type: [String] },
     rating: { type: String },
 }, {
+    toJSON: {
+        transform(doc, ret) {
+            delete ret.password,
+                delete ret.salt,
+                delete ret.__v
+        }
+    },
     timestamps: true
 });
 

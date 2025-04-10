@@ -5,6 +5,6 @@ const router = Router();
 
 router.post('/createVendor', CreateVendor)
 router.get('/getVendors', GetVendors)
-router.post('/getVendorById/:id', GetVendorById)
+router.get('/getVendorById/:id', GetVendorById)
 
 export default router;

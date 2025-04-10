@@ -7,6 +7,7 @@ export const messages = {
     CREATE_VENDOR: 'Vendor Created Succesfully.',
     GET_VENDORS: 'All Vendor Fetched.',
     VENDOR_EXISTS: 'Vendor Already Exists.',
+    VENDOR_NOT_EXIST: 'Vendor Does Not Exist.',
     VENDOR_NOT_CREATED: 'Vendor Already Exists.',
 
 }

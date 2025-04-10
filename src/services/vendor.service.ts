@@ -1,7 +1,7 @@
 import { Request } from "express";
 import { CreateVendorInput } from "../dto";
 import { Vendor } from "../models";
-import { customError } from "../utils";
+import { customError, generatePassword, generateSalt } from "../utils";
 import { StatusCodes } from "http-status-codes";
 import { messages } from "../common/constants";
 
@@ -24,12 +24,11 @@ export const VendorService = {
         if (vendorExist) {
             customError(StatusCodes.BAD_REQUEST, messages.VENDOR_EXISTS)
         }
+        const salt = await generateSalt();
+        const userPassword = await generatePassword(password, salt);
 
-        const createdVendor = await Vendor.create({ name, ownerName, phone, address, email, password, pincode, foodTypes });
-        if (!createdVendor) {
-            customError(StatusCodes.BAD_REQUEST, messages.VENDOR_NOT_CREATED)
-        }
-
+        const createdVendor = await Vendor.create({ name, ownerName, phone, address, email, salt, password: userPassword, pincode, foodTypes });
+        return createdVendor
     },
     /**
      * Function to list all Vendors
@@ -57,4 +56,20 @@ export const VendorService = {
 
         return VendorsList;
     },
+
+    /**
+    * Function to get a vendor by Id
+    * 
+    * @param req
+    * @returns vendor
+    */
+    getVendorById: async (req: Request) => {
+        const vendorId = req.params.id;
+        const vendor = await Vendor.findOne({ _id: vendorId, status: { $ne: messages.DELETED_STATUS } })
+        if (!vendor) {
+            customError(StatusCodes.BAD_REQUEST, messages.VENDOR_NOT_EXIST)
+        }
+
+        return vendor
+    }
 }
