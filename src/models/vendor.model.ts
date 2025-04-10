@@ -12,6 +12,7 @@ interface VendorDoc extends Document {
     foodTypes: [string],
     coverImage: [string],
     rating: string,
+    token: string,
 }
 
 const VendorSchema = new Schema({
@@ -27,12 +28,15 @@ const VendorSchema = new Schema({
     foodTypes: { type: [String] },
     coverImage: { type: [String] },
     rating: { type: String },
+    token: { type: String },
 }, {
     toJSON: {
         transform(doc, ret) {
             delete ret.password,
                 delete ret.salt,
-                delete ret.__v
+                delete ret.__v,
+                delete ret.createdAt,
+                delete ret.updatedAt
         }
     },
     timestamps: true

@@ -4,6 +4,8 @@ export const messages = {
     DELETED_STATUS: 'D',
 
     // Vendor
+    LOGIN_VENDOR: 'Vendor Login Succesfully.',
+    LOGIN_VENDOR_FAILED: 'Vendor Login Failed.',
     CREATE_VENDOR: 'Vendor Created Succesfully.',
     GET_VENDORS: 'All Vendor Fetched.',
     VENDOR_EXISTS: 'Vendor Already Exists.',

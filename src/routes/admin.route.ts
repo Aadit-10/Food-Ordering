@@ -1,8 +1,10 @@
 import { Router } from "express";
-import { adminMsg } from "../controllers";
+import { CreateVendor, GetVendorById, GetVendors } from "../controllers";
 
 const router = Router();
 
-router.get('/adminMsg', adminMsg)
+router.post('/createVendor', CreateVendor)
+router.get('/getVendors', GetVendors)
+router.get('/getVendorById/:id', GetVendorById)
 
 export default router;
