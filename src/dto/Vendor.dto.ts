@@ -12,3 +12,10 @@ export interface CreateVendorInput {
     pincode: string,
     foodTypes: [string],
 }
+
+export interface VendorPayload {
+    id: string,
+    email: string,
+    name: string,
+    foodTypes: string,
+}

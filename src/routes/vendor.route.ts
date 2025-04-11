@@ -1,11 +1,13 @@
 import { Router } from "express";
-import { CreateVendor, GetVendors, GetVendorById, vendorLogin } from "../controllers";
+import { vendorLogin, vendorProfile } from "../controllers";
+import { Authenticate } from "../middlewares";
 
 const router = Router();
 
 router.post('/vendorLogin', vendorLogin)
+router.use(Authenticate)
+router.get('/profile', vendorProfile)
 // router.post('/createVendor', CreateVendor)
-// router.get('/getVendors', GetVendors)
 // router.get('/getVendorById/:id', GetVendorById)
 
 export default router;
