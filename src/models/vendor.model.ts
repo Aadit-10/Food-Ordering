@@ -13,6 +13,7 @@ interface VendorDoc extends Document {
     coverImage: [string],
     rating: string,
     token: string,
+    serviceAvailable: boolean,
 }
 
 const VendorSchema = new Schema({
@@ -29,6 +30,7 @@ const VendorSchema = new Schema({
     coverImage: { type: [String] },
     rating: { type: String },
     token: { type: String },
+    serviceAvailable: { type: Boolean, default: false },
 }, {
     toJSON: {
         transform(doc, ret) {

@@ -14,10 +14,8 @@ export const validateToken = async (req: Request) => {
 
     if (token) {
         const payload = await jwt.verify(token.split(' ')[1], jwt_secret) as AuthPayload
-        console.log("payload", payload);
         req.user = payload;
         return true;
     }
-    console.log("hai from jwtservcie");
     return false
 }

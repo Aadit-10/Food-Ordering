@@ -33,3 +33,35 @@ export const vendorProfile = async (req: Request, res: Response): Promise<any> =
         return sendResponse(res, error.statusCode, error.message)
     }
 };
+
+/**
+ * Function to Update Vendor
+ *
+ * @param req
+ * @param res
+ */
+export const updateVendor = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const profile: any = await VendorService.updateVendorProfile(req);
+        return sendResponse(res, StatusCodes.OK, messages.EDIT_VENDOR_PROFILE_SUCCESS, profile);
+    } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
+
+    }
+};
+
+/**
+ * Function to Update Vendor
+ *
+ * @param req
+ * @param res
+ */
+export const updateVendorService = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const profile: any = await VendorService.updateVendorService(req);
+        return sendResponse(res, StatusCodes.OK, messages.EDIT_VENDOR_SERVICE_SUCCESS, profile);
+    } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
+
+    }
+};
