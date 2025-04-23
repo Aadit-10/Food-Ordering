@@ -82,6 +82,29 @@ export const VendorService = {
         customError(StatusCodes.BAD_REQUEST, messages.VENDOR_NOT_EXIST)
 
     },
+    /**
+   * Function to Update Vendor Cover Image
+   *
+   * @param req
+   * @returns result
+   */
+    updateVendorCoverImage: async (req: Request) => {
+        const user = req.user
+        if (user) {
+            const existingVendor = await findVendorById(user.id)
+            if (existingVendor) {
+
+                const files = req.files as [Express.Multer.File]
+                const images = files.map((file: Express.Multer.File) => file.filename)
+                existingVendor.coverImage.push(...images);
+
+                const result = await existingVendor.save()
+                return result
+            }
+        }
+        customError(StatusCodes.BAD_REQUEST, messages.VENDOR_NOT_EXIST)
+
+    },
 
     /**
     * Function to Edit Vendor Service Availability
@@ -116,6 +139,10 @@ export const VendorService = {
             const { name, description, category, foodType, readyTime, price } = <createFoodInput>req.body;
             const vendor = await findVendorById(user.id);
             if (vendor) {
+                const files = req.files as [Express.Multer.File]
+                const images = files.map((file: Express.Multer.File) => file.filename)
+                console.log("images", images);
+
                 const createdFood = await Food.create({
                     vendorId: vendor._id,
                     name: name,
@@ -125,7 +152,7 @@ export const VendorService = {
                     readyTime: readyTime,
                     price: price,
                     rating: 0,
-                    images: ["mock.jpg"],
+                    images: images,
                 })
 
                 vendor.foods.push(createdFood);
@@ -140,10 +167,17 @@ export const VendorService = {
     * Function to Get Food
     *
     * @param req
-    * @returns 
+    * @returns
     */
     getFood: async (req: Request) => {
-
+        const user: any = req.user;
+        if (user) {
+            const foods = await Food.find({ vendorId: user.id })
+            if (foods) {
+                return foods
+            }
+        }
+        customError(StatusCodes.BAD_REQUEST, messages.SOMETHING_WENT_WRONG)
 
     },
 }

@@ -49,7 +49,11 @@ export const AdminService = {
         const salt = await generateSalt();
         const userPassword = await generatePassword(password, salt);
 
-        const createdVendor = await Vendor.create({ name, ownerName, phone, address, email, salt, password: userPassword, pincode, foodTypes });
+        const createdVendor = await Vendor.create({
+            name, ownerName, phone, address, email,
+            salt, password: userPassword, pincode, foodTypes,
+            foods: []
+        });
         return createdVendor
     },
 

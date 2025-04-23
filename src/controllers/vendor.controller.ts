@@ -49,6 +49,21 @@ export const updateVendor = async (req: Request, res: Response): Promise<any> =>
 
     }
 };
+/**
+ * Function to Update Vendor Cover Image
+ *
+ * @param req
+ * @param res
+ */
+export const updateVendorCoverImage = async (req: Request, res: Response): Promise<any> => {
+    try {
+        await VendorService.updateVendorCoverImage(req);
+        return sendResponse(res, StatusCodes.OK, messages.VENDOR_IMAGE_UPDATED);
+    } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
+
+    }
+};
 
 /**
  * Function to Update Vendor Service Availability
@@ -90,8 +105,8 @@ export const addFood = async (req: Request, res: Response): Promise<any> => {
  */
 export const getFood = async (req: Request, res: Response): Promise<any> => {
     try {
-        await VendorService.getFood(req);
-        return sendResponse(res, StatusCodes.OK, messages.FOOD_FETCHED);
+        const foods = await VendorService.getFood(req);
+        return sendResponse(res, StatusCodes.OK, messages.FOOD_FETCHED, { foods });
     } catch (error) {
         return sendResponse(res, error.statusCode, error.message)
 

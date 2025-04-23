@@ -14,6 +14,9 @@ export const messages = {
     VENDOR_NOT_EXIST: 'Vendor Does Not Exist.',
     VENDOR_NOT_CREATED: 'Vendor Already Exists.',
     VENDOR_PROFILE: 'Vendor Profile Fetched.',
+    VENDOR_IMAGE_UPDATED: 'Vendor Image Updated.',
+    VENDOR_IMAGE_UPDATE_FAILED: 'Vendor Image Update Failed.',
+
     EDIT_VENDOR_PROFILE_SUCCESS: 'Vendor Profile Edited Successfully.',
     EDIT_VENDOR_SERVICE_SUCCESS: 'Vendor Service Availabilty Edited Successfully.',
     FOOD_ADDED: 'Food Added Successfully',
