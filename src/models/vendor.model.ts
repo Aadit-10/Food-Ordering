@@ -14,6 +14,7 @@ interface VendorDoc extends Document {
     rating: string,
     token: string,
     serviceAvailable: boolean,
+    foods: any
 }
 
 const VendorSchema = new Schema({
@@ -31,6 +32,10 @@ const VendorSchema = new Schema({
     rating: { type: String },
     token: { type: String },
     serviceAvailable: { type: Boolean, default: false },
+    foods: [{
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'food'
+    }]
 }, {
     toJSON: {
         transform(doc, ret) {

@@ -51,7 +51,7 @@ export const updateVendor = async (req: Request, res: Response): Promise<any> =>
 };
 
 /**
- * Function to Update Vendor
+ * Function to Update Vendor Service Availability
  *
  * @param req
  * @param res
@@ -60,6 +60,38 @@ export const updateVendorService = async (req: Request, res: Response): Promise<
     try {
         const profile: any = await VendorService.updateVendorService(req);
         return sendResponse(res, StatusCodes.OK, messages.EDIT_VENDOR_SERVICE_SUCCESS, profile);
+    } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
+
+    }
+};
+
+/**
+ * Function to AddFood
+ *
+ * @param req
+ * @param res
+ */
+export const addFood = async (req: Request, res: Response): Promise<any> => {
+    try {
+        await VendorService.addFood(req);
+        return sendResponse(res, StatusCodes.OK, messages.FOOD_ADDED);
+    } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
+
+    }
+};
+
+/**
+ * Function to Get Food
+ *
+ * @param req
+ * @param res
+ */
+export const getFood = async (req: Request, res: Response): Promise<any> => {
+    try {
+        await VendorService.getFood(req);
+        return sendResponse(res, StatusCodes.OK, messages.FOOD_FETCHED);
     } catch (error) {
         return sendResponse(res, error.statusCode, error.message)
 

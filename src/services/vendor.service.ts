@@ -1,9 +1,10 @@
 import { Request } from "express";
 import { CreateVendorInput, EditVendorInput, VendorLogin } from "../dto";
-import { Vendor } from "../models";
+import { Food, Vendor } from "../models";
 import { customError, generateToken, validatePassword } from "../utils";
 import { StatusCodes } from "http-status-codes";
 import { messages } from "../common/constants";
+import { createFoodInput } from "../dto/Food.dto";
 
 const findVendorByEmail = async (email) => {
     const vendorExists = await Vendor.findOne({
@@ -81,12 +82,13 @@ export const VendorService = {
         customError(StatusCodes.BAD_REQUEST, messages.VENDOR_NOT_EXIST)
 
     },
+
     /**
-   * Function to Edit Vendor Service Availability
-   *
-   * @param req
-   * @returns 
-   */
+    * Function to Edit Vendor Service Availability
+    *
+    * @param req
+    * @returns 
+    */
     updateVendorService: async (req: Request) => {
         const user = req.user
         if (user) {
@@ -99,6 +101,49 @@ export const VendorService = {
             }
         }
         customError(StatusCodes.BAD_REQUEST, messages.VENDOR_NOT_EXIST)
+
+    },
+
+    /**
+    * Function to Add Food
+    *
+    * @param req
+    * @returns 
+    */
+    addFood: async (req: Request) => {
+        const user: any = req.user;
+        if (user) {
+            const { name, description, category, foodType, readyTime, price } = <createFoodInput>req.body;
+            const vendor = await findVendorById(user.id);
+            if (vendor) {
+                const createdFood = await Food.create({
+                    vendorId: vendor._id,
+                    name: name,
+                    description: description,
+                    category: category,
+                    foodType: foodType,
+                    readyTime: readyTime,
+                    price: price,
+                    rating: 0,
+                    images: ["mock.jpg"],
+                })
+
+                vendor.foods.push(createdFood);
+                const result = await vendor.save();
+                return result
+            }
+        }
+        customError(StatusCodes.BAD_REQUEST, messages.SOMETHING_WENT_WRONG)
+    },
+
+    /**
+    * Function to Get Food
+    *
+    * @param req
+    * @returns 
+    */
+    getFood: async (req: Request) => {
+
 
     },
 }
