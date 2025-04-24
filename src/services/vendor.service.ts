@@ -141,7 +141,6 @@ export const VendorService = {
             if (vendor) {
                 const files = req.files as [Express.Multer.File]
                 const images = files.map((file: Express.Multer.File) => file.filename)
-                console.log("images", images);
 
                 const createdFood = await Food.create({
                     vendorId: vendor._id,
