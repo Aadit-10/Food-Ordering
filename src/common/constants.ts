@@ -29,4 +29,9 @@ export const messages = {
     NO_FOOD_AVAILABLE: 'No Food Available in Region',
     TOP_RESTAURANTS_FOUND: 'Top Restaurants Found',
     RESTAURANTS_FOUND: 'Restaurants Found',
+
+    // Customer
+    CUSTOMER_SIGNUP: 'Customer Sign up Success',
+    CUSTOMER_SIGNUP_FAILED: 'Customer Sign up Success',
+
 }
