@@ -4,6 +4,7 @@ export const messages = {
     DELETED_STATUS: 'D',
     NOT_AUTHORISED: 'User Not Authorised',
     SOMETHING_WENT_WRONG: 'Something went Wrong',
+    DATA_NOT_FOUND: 'Data not Found',
 
     // Vendor
     LOGIN_VENDOR: 'Vendor Login Succesfully.',
@@ -16,12 +17,17 @@ export const messages = {
     VENDOR_PROFILE: 'Vendor Profile Fetched.',
     VENDOR_IMAGE_UPDATED: 'Vendor Image Updated.',
     VENDOR_IMAGE_UPDATE_FAILED: 'Vendor Image Update Failed.',
-
     EDIT_VENDOR_PROFILE_SUCCESS: 'Vendor Profile Edited Successfully.',
     EDIT_VENDOR_SERVICE_SUCCESS: 'Vendor Service Availabilty Edited Successfully.',
     FOOD_ADDED: 'Food Added Successfully',
     FOOD_ADD_FAILED: 'Food Adding Failed',
     FOOD_FETCHED: 'Food Fetched Successfully',
-
     VENDOR_NOT_FOUND: 'Vendor Information Not Found.',
+
+    // Shopping
+    FOOD_AVAILABILITY: 'Food Availability of Region Found',
+    NO_FOOD_AVAILABLE: 'No Food Available in Region',
+    TOP_RESTAURANTS_FOUND: 'Top Restaurants Found'
+
+
 }

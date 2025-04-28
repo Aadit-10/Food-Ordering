@@ -1,19 +1,15 @@
 import express from "express";
-import bodyParser from "body-parser";
-import BaseRouter from './routes'
 import { connectDb } from "./config/database";
-import path from 'path'
+import App from './config/ExpressApp'
 
-const app = express();
+const StartServer = async () => {
+    const app = express();
+    connectDb();
+    await App(app);
 
-connectDb();
+    app.listen(3000, () => {
+        console.log("App is listening at port 3000");
+    });
+}
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use('/images', express.static(path.join(__dirname, 'images')));
-
-app.use('/base', BaseRouter)
-
-app.listen(3000, () => {
-    console.log("App is listening at port 3000");
-});
+StartServer()
