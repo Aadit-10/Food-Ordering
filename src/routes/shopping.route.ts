@@ -14,7 +14,7 @@ router.get('/top-restaurants/:pincode', getTopRestaurants);
 router.get('/foods-in-30-min/:pincode', getFoodIn30Min);
 
 /**---------------- Search Foods ---------------- **/
-router.get('/search/:pincode', searchFoods);
+router.get('/searchFoods/:pincode', searchFoods);
 
 
 /**---------------- Find Restaurents By ID---------------- **/

@@ -27,7 +27,6 @@ export const messages = {
     // Shopping
     FOOD_AVAILABILITY: 'Food Availability of Region Found',
     NO_FOOD_AVAILABLE: 'No Food Available in Region',
-    TOP_RESTAURANTS_FOUND: 'Top Restaurants Found'
-
-
+    TOP_RESTAURANTS_FOUND: 'Top Restaurants Found',
+    RESTAURANTS_FOUND: 'Restaurants Found',
 }

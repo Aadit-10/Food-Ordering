@@ -77,11 +77,23 @@ export const ShoppingService = {
     * Function to Search Foods 
     *
     * @param req
-    * @returns 
+    * @returns foodResult
     */
     searchFoods: async (req: Request) => {
 
+        const pincode = req.params.pincode;
 
+        const foods = await Vendor.find({ pincode, serviceAvailable: true })
+            .populate('foods');
+
+        if (!foods) {
+            customError(StatusCodes.BAD_REQUEST, messages.DATA_NOT_FOUND)
+        }
+
+        let foodResult = []
+        foods.map(item => foodResult.push(...item.foods))
+
+        return foodResult
     },
     /**
     * Function to Find Restaurants by Id
@@ -91,6 +103,12 @@ export const ShoppingService = {
     */
     RestaurantById: async (req: Request) => {
 
+        const id = req.params.id;
+        const restaurants = await Vendor.findById(id).populate('foods');
 
+        if (!restaurants) {
+            customError(StatusCodes.BAD_REQUEST, messages.DATA_NOT_FOUND)
+        }
+        return restaurants
     },
 }

@@ -57,9 +57,10 @@ export const getFoodIn30Min = async (req: Request, res: Response): Promise<any> 
 */
 export const searchFoods = async (req: Request, res: Response): Promise<any> => {
     try {
-
+        const foods = await ShoppingService.searchFoods(req);
+        return sendResponse(res, StatusCodes.OK, messages.FOOD_AVAILABILITY, { foods })
     } catch (error) {
-
+        return sendResponse(res, error.statusCode, error.message)
     }
 };
 
@@ -71,8 +72,9 @@ export const searchFoods = async (req: Request, res: Response): Promise<any> => 
 */
 export const RestaurantById = async (req: Request, res: Response): Promise<any> => {
     try {
-
+        const restaurants = await ShoppingService.RestaurantById(req);
+        return sendResponse(res, StatusCodes.OK, messages.FOOD_AVAILABILITY, { restaurants })
     } catch (error) {
-
+        return sendResponse(res, error.statusCode, error.message)
     }
 };
