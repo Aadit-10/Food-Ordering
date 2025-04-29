@@ -14,7 +14,7 @@ export interface CreateVendorInput {
 }
 
 export interface VendorPayload {
-    id: string,
+    _id: any,
     email: string,
     name: string,
     foodTypes: string,

@@ -1,21 +1,23 @@
 import { Router } from "express";
-import { customerSignup } from "../controllers";
+import { customerLogin, customerSignup, customerVerify, EditCustomerProfile, GetCustomerProfile, RequestOtp } from "../controllers";
+import { Authenticate } from "../middlewares";
 
 const router = Router();
 
 router.post('/signup', customerSignup);
 
-// router.post('/login');
+router.post('/login', customerLogin);
 
 
+// Authenticate
+// router.use(Authenticate)
 
+router.patch('/verify', Authenticate, customerVerify);
 
-// router.patch('/verify');
+router.get('/otp', RequestOtp);
 
-// router.get('/otp');
+router.get('/profile', GetCustomerProfile);
 
-// router.get('/profile');
-
-// router.patch('/editProfile');
+router.patch('/editProfile', EditCustomerProfile);
 
 export default router;

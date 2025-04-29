@@ -5,3 +5,7 @@ export const GenerateOtp = () => {
 
     return { otp, expiry }
 }
+
+export const onRequestOtp = async (otp: number, to: string) => {
+
+}

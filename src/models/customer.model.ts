@@ -17,12 +17,11 @@ interface CustomerDoc extends Document {
 }
 
 const CustomerSchema = new Schema({
-    name: { type: String, required: true },
     email: { type: String, required: true },
     password: { type: String, required: true },
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    address: { type: String, required: true },
+    firstName: { type: String },
+    lastName: { type: String },
+    address: { type: String },
     phone: { type: String, required: true },
     salt: { type: String, required: true },
     verified: { type: Boolean, default: false },

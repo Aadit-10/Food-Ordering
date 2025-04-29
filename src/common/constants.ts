@@ -32,6 +32,10 @@ export const messages = {
 
     // Customer
     CUSTOMER_SIGNUP: 'Customer Sign up Success',
-    CUSTOMER_SIGNUP_FAILED: 'Customer Sign up Success',
+    CUSTOMER_SIGNUP_FAILED: 'Customer Sign up Failed',
+    CUSTOMER_EXISTS: 'User Already Exists',
+    CUSTOMER_NOT_EXISTS: 'User not Exists',
+    CUSTOMER_VERIFY_SUCCESS: 'User Verify Success',
+    CUSTOMER_VERIFY_FAILED: 'User Verify Failed',
 
 }

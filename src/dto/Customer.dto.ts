@@ -11,3 +11,9 @@ export class createCustomerInputs {
     @Length(7, 12)
     password: string;
 }
+
+export interface CustomerPayload {
+    _id: any,
+    email: string,
+    verified: boolean
+}

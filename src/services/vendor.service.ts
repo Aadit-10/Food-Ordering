@@ -36,11 +36,17 @@ export const VendorService = {
             customError(StatusCodes.NOT_FOUND, messages.LOGIN_VENDOR_FAILED)
         };
 
-        const token: String = generateToken(vendor._id.toString());
+        const token: String = generateToken({
+            _id: vendor._id,
+            email: vendor.email,
+            name: vendor.name,
+            foodTypes: vendor.foodTypes,
+        });
         vendor.token = token;
         await vendor.save();
         return vendor;
     },
+
 
     /**
     * Function to Get Vendor Profile
@@ -53,7 +59,7 @@ export const VendorService = {
         if (!user) {
             customError(StatusCodes.BAD_REQUEST, messages.VENDOR_NOT_FOUND)
         }
-        const existingVendor = await findVendorById(user.id)
+        const existingVendor = await findVendorById(user._id)
 
         return existingVendor
     },
@@ -68,7 +74,7 @@ export const VendorService = {
         const { address, name, phone, foodTypes } = <EditVendorInput>req.body;
         const user = req.user
         if (user) {
-            const existingVendor = await findVendorById(user.id)
+            const existingVendor = await findVendorById(user._id)
             if (existingVendor) {
                 existingVendor.name = name;
                 existingVendor.address = address;
@@ -91,7 +97,7 @@ export const VendorService = {
     updateVendorCoverImage: async (req: Request) => {
         const user = req.user
         if (user) {
-            const existingVendor = await findVendorById(user.id)
+            const existingVendor = await findVendorById(user._id)
             if (existingVendor) {
 
                 const files = req.files as [Express.Multer.File]
@@ -115,7 +121,7 @@ export const VendorService = {
     updateVendorService: async (req: Request) => {
         const user = req.user
         if (user) {
-            const existingVendor = await findVendorById(user.id)
+            const existingVendor = await findVendorById(user._id)
             if (existingVendor) {
                 existingVendor.serviceAvailable = !existingVendor.serviceAvailable;
 
