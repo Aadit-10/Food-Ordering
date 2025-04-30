@@ -3,6 +3,9 @@ import { CustomerService } from "../services/customer.service";
 import { sendResponse } from "../utils";
 import { StatusCodes } from "http-status-codes";
 import { messages } from "../common/constants";
+import { plainToClass } from "class-transformer";
+import { EditCustomerProfileInputs, UserLoginInputs } from "../dto";
+import { validate } from "class-validator";
 
 /**
  * Function for Customer Signup
@@ -27,10 +30,22 @@ export const customerSignup = async (req: Request, res: Response): Promise<any> 
  */
 export const customerLogin = async (req: Request, res: Response): Promise<any> => {
     try {
-        const profile = await CustomerService.CustomerLogin(req);
-        // return sendResponse(res, StatusCodes.OK, messages.CUSTOMER_SIGNUP, profile);
+
+        const loginInputs = plainToClass(UserLoginInputs, req.body);
+        const InputErrors = await validate(loginInputs, { validationError: { target: false } });
+        if (InputErrors.length > 0) {
+            const errorMessages = InputErrors.map(error => ({
+                property: error.property,
+                constraints: error.constraints
+            }));
+            return sendResponse(res, StatusCodes.BAD_REQUEST, messages.CUSTOMER_LOGIN_FAILED, errorMessages);
+        }
+
+        const result = await CustomerService.CustomerLogin(loginInputs);
+        return sendResponse(res, StatusCodes.OK, messages.CUSTOMER_LOGIN_SUCCESS, result);
+
     } catch (error) {
-        return sendResponse(res, error.statusCode, error.message)
+        return sendResponse(res, error.statusCode, error.message,)
     }
 };
 
@@ -58,7 +73,7 @@ export const customerVerify = async (req: Request, res: Response): Promise<any> 
 export const RequestOtp = async (req: Request, res: Response): Promise<any> => {
     try {
         const profile = await CustomerService.RequestOtp(req);
-        // return sendResponse(res, StatusCodes.OK, messages.CUSTOMER_SIGNUP, profile);
+        return sendResponse(res, StatusCodes.OK, messages.CUSTOMER_SIGNUP, profile);
     } catch (error) {
         return sendResponse(res, error.statusCode, error.message)
     }
@@ -73,7 +88,7 @@ export const RequestOtp = async (req: Request, res: Response): Promise<any> => {
 export const GetCustomerProfile = async (req: Request, res: Response): Promise<any> => {
     try {
         const profile = await CustomerService.GetCustomerProfile(req);
-        // return sendResponse(res, StatusCodes.OK, messages.CUSTOMER_SIGNUP, profile);
+        return sendResponse(res, StatusCodes.OK, messages.CUSTOMER_SIGNUP, profile);
     } catch (error) {
         return sendResponse(res, error.statusCode, error.message)
     }
@@ -87,8 +102,19 @@ export const GetCustomerProfile = async (req: Request, res: Response): Promise<a
  */
 export const EditCustomerProfile = async (req: Request, res: Response): Promise<any> => {
     try {
-        const profile = await CustomerService.EditCustomerProfile(req);
-        // return sendResponse(res, StatusCodes.OK, messages.CUSTOMER_SIGNUP, profile);
+        // Used for sending Validation messages by class-validator
+        const editInputs = plainToClass(EditCustomerProfileInputs, req.body);
+        const InputErrors = await validate(editInputs, { validationError: { target: false } });
+        if (InputErrors.length > 0) {
+            const errorMessages = InputErrors.map(error => ({
+                property: error.property,
+                constraints: error.constraints
+            }));
+            return sendResponse(res, StatusCodes.BAD_REQUEST, messages.CUSTOMER_LOGIN_FAILED, errorMessages);
+        }
+
+        await CustomerService.EditCustomerProfile(req, editInputs);
+        return sendResponse(res, StatusCodes.OK, messages.CUSTOMER_EDIT_SUCCESS);
     } catch (error) {
         return sendResponse(res, error.statusCode, error.message)
     }

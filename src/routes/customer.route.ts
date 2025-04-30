@@ -10,9 +10,9 @@ router.post('/login', customerLogin);
 
 
 // Authenticate
-// router.use(Authenticate)
+router.use(Authenticate)
 
-router.patch('/verify', Authenticate, customerVerify);
+router.patch('/verify', customerVerify);
 
 router.get('/otp', RequestOtp);
 

@@ -37,5 +37,9 @@ export const messages = {
     CUSTOMER_NOT_EXISTS: 'User not Exists',
     CUSTOMER_VERIFY_SUCCESS: 'User Verify Success',
     CUSTOMER_VERIFY_FAILED: 'User Verify Failed',
+    CUSTOMER_LOGIN_SUCCESS: 'Customer Login Success',
+    CUSTOMER_LOGIN_FAILED: 'Customer Login Failed',
+    OTP_SEND_SUCCESSFULLY: 'Otp Sent Successfully',
+    CUSTOMER_EDIT_SUCCESS: 'Customer Edit Success',
 
 }

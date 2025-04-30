@@ -1,8 +1,8 @@
 import { plainToClass } from "class-transformer";
 import { Request } from "express";
-import { createCustomerInputs, } from "../dto";
+import { createCustomerInputs, EditCustomerProfileInputs, UserLoginInputs, } from "../dto";
 import { validate } from "class-validator";
-import { customError, GenerateOtp, generatePassword, generateSalt, generateToken } from "../utils";
+import { customError, GenerateOtp, generatePassword, generateSalt, generateToken, validatePassword } from "../utils";
 import { StatusCodes } from "http-status-codes";
 import { messages } from "../common/constants";
 import { Customer } from "../models";
@@ -53,27 +53,38 @@ export const CustomerService = {
         if (!result) {
             customError(StatusCodes.BAD_REQUEST, messages.CUSTOMER_SIGNUP_FAILED)
         }
-        const token = generateToken({
-            _id: result._id,
-            email: result.email,
-            verified: result.verified
-        })
-        let sendData = {
-            token: token,
-            verified: result.verified,
-            email: result.email
-        }
+        const token = generateToken({ _id: result._id, email: result.email, verified: result.verified })
+        let sendData = { token: token, verified: result.verified, email: result.email }
         return sendData;
     },
 
     /**
     * Function for Customer Login
     *
-    * @param req
+    * @param loginInputs
     * @returns 
     */
-    CustomerLogin: async (req: Request) => {
+    CustomerLogin: async (loginInputs: UserLoginInputs) => {
+        const { email, password } = loginInputs;
+        const profile = await Customer.findOne({ email });
 
+        if (!profile) {
+            customError(StatusCodes.BAD_REQUEST, messages.CUSTOMER_NOT_EXISTS);
+        }
+
+        const validation = await validatePassword(password, profile.password)
+
+        if (!validation) {
+            customError(StatusCodes.NOT_FOUND, messages.SOMETHING_WENT_WRONG);
+        }
+
+        const token = generateToken({
+            _id: profile._id,
+            email: profile.email,
+            verified: profile.verified
+        })
+        let sendData = { token: token, verified: profile.verified, email: profile.email }
+        return sendData;
     },
 
     /**
@@ -117,6 +128,18 @@ export const CustomerService = {
     * @returns 
     */
     RequestOtp: async (req: Request) => {
+        const customer = req.user;
+
+        const profile = await Customer.findById(customer._id);
+        if (!profile) {
+            customError(StatusCodes.BAD_REQUEST, messages.CUSTOMER_NOT_EXISTS)
+        }
+        const { otp, expiry } = GenerateOtp()
+        profile.otp = otp;
+        profile.otp_expiry = expiry;
+
+        await profile.save()
+        return profile
 
     },
 
@@ -124,10 +147,18 @@ export const CustomerService = {
     * Function for Customer 
     *
     * @param req
-    * @returns 
+    * @returns profile
     */
     GetCustomerProfile: async (req: Request) => {
 
+        const customer = req.user;
+
+        const profile = await Customer.findById(customer._id);
+        if (!profile) {
+            customError(StatusCodes.BAD_REQUEST, messages.CUSTOMER_NOT_EXISTS)
+        }
+
+        return profile
     },
 
     /**
@@ -136,7 +167,20 @@ export const CustomerService = {
     * @param req
     * @returns 
     */
-    EditCustomerProfile: async (req: Request) => {
+    EditCustomerProfile: async (req: Request, editInputs: EditCustomerProfileInputs) => {
 
+        const customer = req.user;
+        const { firstName, lastName, address } = editInputs;
+
+        const profile = await Customer.findById(customer._id);
+        if (!profile) {
+            customError(StatusCodes.BAD_REQUEST, messages.CUSTOMER_NOT_EXISTS)
+        }
+
+        profile.firstName = firstName;
+        profile.lastName = lastName;
+        profile.address = address;
+
+        await profile.save()
     },
 }
