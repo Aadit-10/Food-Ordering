@@ -141,31 +141,31 @@ export const VendorService = {
     */
     addFood: async (req: Request) => {
         const user: any = req.user;
-        if (user) {
-            const { name, description, category, foodType, readyTime, price } = <createFoodInput>req.body;
-            const vendor = await findVendorById(user.id);
-            if (vendor) {
-                const files = req.files as [Express.Multer.File]
-                const images = files.map((file: Express.Multer.File) => file.filename)
-
-                const createdFood = await Food.create({
-                    vendorId: vendor._id,
-                    name: name,
-                    description: description,
-                    category: category,
-                    foodType: foodType,
-                    readyTime: readyTime,
-                    price: price,
-                    rating: 0,
-                    images: images,
-                })
-
-                vendor.foods.push(createdFood);
-                const result = await vendor.save();
-                return result
-            }
+        if (!user) {
+            customError(StatusCodes.BAD_REQUEST, messages.SOMETHING_WENT_WRONG)
         }
-        customError(StatusCodes.BAD_REQUEST, messages.SOMETHING_WENT_WRONG)
+        const { name, description, category, foodType, readyTime, price } = <createFoodInput>req.body;
+        const vendor = await findVendorById(user.id);
+        if (vendor) {
+            const files = req.files as [Express.Multer.File]
+            const images = files.map((file: Express.Multer.File) => file.filename)
+
+            const createdFood = await Food.create({
+                vendorId: vendor._id,
+                name: name,
+                description: description,
+                category: category,
+                foodType: foodType,
+                readyTime: readyTime,
+                price: price,
+                rating: 0,
+                images: images,
+            })
+
+            vendor.foods.push(createdFood);
+            const result = await vendor.save();
+            return result
+        }
     },
 
     /**
@@ -177,7 +177,7 @@ export const VendorService = {
     getFood: async (req: Request) => {
         const user: any = req.user;
         if (user) {
-            const foods = await Food.find({ vendorId: user.id })
+            const foods = await Food.find({ vendorId: user._id })
             if (foods) {
                 return foods
             }

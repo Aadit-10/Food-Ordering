@@ -120,3 +120,48 @@ export const EditCustomerProfile = async (req: Request, res: Response): Promise<
     }
 };
 
+/**
+ * Function for Creating an Order
+ *
+ * @param req
+ * @param res
+ */
+export const createOrder = async (req: Request, res: Response): Promise<any> => {
+    try {
+        await CustomerService.createOrder(req);
+        return sendResponse(res, StatusCodes.CREATED, messages.ORDER_CREATED);
+    } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
+    }
+};
+
+/**
+ * Function for Finding an Order
+ *
+ * @param req
+ * @param res
+ */
+export const GetOrder = async (req: Request, res: Response): Promise<any> => {
+    try {
+        await CustomerService.getOrder(req);
+        return sendResponse(res, StatusCodes.OK, messages.CUSTOMER_EDIT_SUCCESS);
+    } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
+    }
+};
+
+/**
+ * Function for Finding an Order by Id
+ *
+ * @param req
+ * @param res
+ */
+export const GetOrderById = async (req: Request, res: Response): Promise<any> => {
+    try {
+        await CustomerService.getOrderById(req);
+        return sendResponse(res, StatusCodes.OK, messages.CUSTOMER_EDIT_SUCCESS);
+    } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
+    }
+};
+

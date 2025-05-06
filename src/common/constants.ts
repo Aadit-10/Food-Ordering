@@ -42,4 +42,6 @@ export const messages = {
     OTP_SEND_SUCCESSFULLY: 'Otp Sent Successfully',
     CUSTOMER_EDIT_SUCCESS: 'Customer Edit Success',
 
+    // Order
+    ORDER_CREATED: 'Order Created',
 }

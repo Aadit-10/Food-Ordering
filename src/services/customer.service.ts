@@ -1,11 +1,12 @@
 import { plainToClass } from "class-transformer";
 import { Request } from "express";
-import { createCustomerInputs, EditCustomerProfileInputs, UserLoginInputs, } from "../dto";
+import { createCustomerInputs, EditCustomerProfileInputs, OrderInputs, UserLoginInputs, } from "../dto";
 import { validate } from "class-validator";
 import { customError, GenerateOtp, generatePassword, generateSalt, generateToken, validatePassword } from "../utils";
 import { StatusCodes } from "http-status-codes";
 import { messages } from "../common/constants";
-import { Customer } from "../models";
+import { Customer, Food } from "../models";
+import { Order } from "../models/order.model";
 
 export const CustomerService = {
 
@@ -48,6 +49,7 @@ export const CustomerService = {
             verified: false,
             lat: 0,
             lng: 0,
+            orders: [],
         })
 
         if (!result) {
@@ -162,7 +164,7 @@ export const CustomerService = {
     },
 
     /**
-    * Function for Customer 
+    * Function for edit Customer Profile 
     *
     * @param req
     * @returns 
@@ -183,4 +185,80 @@ export const CustomerService = {
 
         await profile.save()
     },
+
+    /**
+    * Function for Customer 
+    *
+    * @param req
+    * @returns 
+    */
+    createOrder: async (req: Request) => {
+        const customer = req.user;
+        const orderId = `${Math.floor(Math.random() * 89999 + 1000)}`;
+        const profile = await Customer.findById(customer._id);
+
+        const cart = <[OrderInputs]>req.body;
+
+        let cartItems = Array();
+        let netAmount = 0.0;
+
+        const foods = await Food.find().where('_id').in(cart.map(item => item._id)).exec();
+
+        foods.map(food => {
+            cart.map(({ _id, unit }) => {
+                if (food._id == _id) {
+                    netAmount += (food.price * unit)
+                }
+            })
+        });
+
+        if (cartItems) {
+            const currentOrder = await Order.create({
+                orderId: orderId,
+                items: cartItems,
+                totalAmount: netAmount,
+                orderDate: new Date(),
+                paidThrough: 'COD',
+                paymentResponse: 'Good',
+                orderStatus: 'Waiting',
+            })
+
+            if (currentOrder) {
+                profile.orders.push(currentOrder)
+                await profile.save();
+                return currentOrder
+            }
+        }
+
+    },
+
+    /**
+     * Function for Customer 
+     *
+     * @param req
+     * @returns 
+     */
+    getOrder: async (req: Request) => {
+        const customer = req.user;
+        const profile = (await Customer.findById(customer._id)).populated('orders');
+        if (!profile) {
+            customError(StatusCodes.BAD_REQUEST, messages.CUSTOMER_NOT_EXISTS)
+        }
+        // add pagination here
+        return profile.orders
+    },
+
+    /**
+    * Function for Customer 
+    *
+    * @param req
+    * @returns 
+    */
+    getOrderById: async (req: Request) => {
+        const orderId: any = req.params.id;
+        const order = await Order.findOne(orderId).populate('items.food')
+        return order
+    },
+
+
 }
