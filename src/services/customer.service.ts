@@ -272,11 +272,8 @@ export const CustomerService = {
         if (!profile) {
             customError(StatusCodes.BAD_REQUEST, messages.CUSTOMER_NOT_EXISTS)
         }
-        console.log("profile first", profile);
-        // need validation which checks unit greater than 0
         const { _id, unit } = <OrderInputs>req.body;
         const food = await Food.findById(_id);
-        console.log("food", food);
         if (!food) {
             customError(StatusCodes.BAD_REQUEST, messages.FOOD_NOT_FOUND)
         }
@@ -284,10 +281,6 @@ export const CustomerService = {
         let cartItems = Array();
         cartItems = profile.cart;
         cartItems = cartItems.filter(item => item.food !== null && item.food !== undefined);
-
-        console.log("cartItems", cartItems);
-        // till the above its okay
-
 
         const existingIndex = cartItems.findIndex(item => item.food._id.toString() === _id);
 
@@ -299,44 +292,12 @@ export const CustomerService = {
             }
         } else {
             if (unit > 0) {
-                console.log("isthis working");
                 cartItems.push({ food, unit }); // ✅ add new item
             }
         }
-        console.log("cartItems 2", cartItems);
         profile.cart = cartItems as any;
-        console.log("profile after cart", profile);
         const cartResult = await profile.save();
         return cartResult.cart;
-
-
-        // if (cartItems.length > 0) {
-        //     let existItem = cartItems.filter((item) => item.food._id.toString() === _id)
-        //     console.log("existItem", existItem);
-
-        //     if (existItem.length > 0) {
-        //         const index = cartItems.indexOf(existItem[0])
-        //         if (unit > 0) {
-        //             cartItems[index] = { food, unit }
-        //         }
-        //         else {
-        //             cartItems.splice(index, 1);
-        //         }
-        //     }
-        //     else {
-        //         cartItems.push({ food, unit })
-        //     }
-        // } else {
-        //     cartItems.push({ food, unit })
-        //     console.log("cartItems", cartItems);
-        // }
-        // console.log("cartItems", cartItems);
-
-        // if (cartItems.length > 0) {
-        //     profile.cart = cartItems as any;
-        //     const cartResult = await profile.save();
-        //     return cartResult.cart;
-        // }
     },
 
     /**
@@ -353,13 +314,20 @@ export const CustomerService = {
         }
         return profile.cart
     },
+
     /**
-    * Function for deleting from cart
+    * Function for Deleting Cart
     *
     * @param req
     * @returns 
     */
     deleteFromCart: async (req: Request) => {
-
+        const customer = req.user;
+        const profile = await Customer.findById(customer._id).populate('cart.food');
+        if (!profile) {
+            customError(StatusCodes.BAD_REQUEST, messages.CUSTOMER_NOT_EXISTS)
+        }
+        profile.cart = [] as any;
+        await profile.save();
     },
 }

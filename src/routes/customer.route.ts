@@ -27,10 +27,9 @@ router.patch('/editProfile', EditCustomerProfile);
 
 // Cart
 
-router.post('/addToCart', UpdateCart);
+router.post('/updateCart', UpdateCart);
 router.get('/getFromCart', GetCart);
-router.delete('/deleteFromCart', DeleteCart);
-
+router.delete('/deleteCart', DeleteCart);
 
 // Payment
 

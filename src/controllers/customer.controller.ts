@@ -173,8 +173,8 @@ export const GetOrderById = async (req: Request, res: Response): Promise<any> =>
  */
 export const UpdateCart = async (req: Request, res: Response): Promise<any> => {
     try {
-        const cart = await CustomerService.updateCart(req);
-        return sendResponse(res, StatusCodes.OK, messages.ADDED_TO_CART, { cart });
+        await CustomerService.updateCart(req);
+        return sendResponse(res, StatusCodes.OK, messages.ADDED_TO_CART);
     } catch (error) {
         return sendResponse(res, error.statusCode, error.message)
     }
@@ -196,7 +196,7 @@ export const GetCart = async (req: Request, res: Response): Promise<any> => {
 };
 
 /**
- * Function for Function for deleting from cart
+ * Function for deleting cart
  *
  * @param req
  * @param res
@@ -204,7 +204,7 @@ export const GetCart = async (req: Request, res: Response): Promise<any> => {
 export const DeleteCart = async (req: Request, res: Response): Promise<any> => {
     try {
         await CustomerService.deleteFromCart(req);
-        // return sendResponse(res, StatusCodes.OK, messages.CUSTOMER_EDIT_SUCCESS);
+        return sendResponse(res, StatusCodes.OK, messages.DELETE_CART);
     } catch (error) {
         return sendResponse(res, error.statusCode, error.message)
     }

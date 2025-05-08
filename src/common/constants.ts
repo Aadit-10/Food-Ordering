@@ -49,5 +49,5 @@ export const messages = {
     // Cart
     ADDED_TO_CART: 'Item Added to Cart',
     FETCHED_CART: 'Items fetched from Cart',
-
+    DELETE_CART: 'Cart Deleted',
 }
