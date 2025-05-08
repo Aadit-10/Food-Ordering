@@ -165,3 +165,48 @@ export const GetOrderById = async (req: Request, res: Response): Promise<any> =>
     }
 };
 
+/**
+ * Function for Function for adding to cart
+ *
+ * @param req
+ * @param res
+ */
+export const UpdateCart = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const cart = await CustomerService.updateCart(req);
+        return sendResponse(res, StatusCodes.OK, messages.ADDED_TO_CART, { cart });
+    } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
+    }
+};
+
+/**
+ * Function for Function to Get Cart Items
+ *
+ * @param req
+ * @param res
+ */
+export const GetCart = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const items = await CustomerService.getCartItems(req);
+        return sendResponse(res, StatusCodes.OK, messages.FETCHED_CART, { items });
+    } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
+    }
+};
+
+/**
+ * Function for Function for deleting from cart
+ *
+ * @param req
+ * @param res
+ */
+export const DeleteCart = async (req: Request, res: Response): Promise<any> => {
+    try {
+        await CustomerService.deleteFromCart(req);
+        // return sendResponse(res, StatusCodes.OK, messages.CUSTOMER_EDIT_SUCCESS);
+    } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
+    }
+};
+

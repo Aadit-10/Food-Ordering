@@ -141,31 +141,30 @@ export const VendorService = {
     */
     addFood: async (req: Request) => {
         const user: any = req.user;
-        if (!user) {
-            customError(StatusCodes.BAD_REQUEST, messages.SOMETHING_WENT_WRONG)
-        }
+
         const { name, description, category, foodType, readyTime, price } = <createFoodInput>req.body;
-        const vendor = await findVendorById(user.id);
-        if (vendor) {
-            const files = req.files as [Express.Multer.File]
-            const images = files.map((file: Express.Multer.File) => file.filename)
-
-            const createdFood = await Food.create({
-                vendorId: vendor._id,
-                name: name,
-                description: description,
-                category: category,
-                foodType: foodType,
-                readyTime: readyTime,
-                price: price,
-                rating: 0,
-                images: images,
-            })
-
-            vendor.foods.push(createdFood);
-            const result = await vendor.save();
-            return result
+        const vendor = await findVendorById(user._id);
+        if (!vendor) {
+            customError(StatusCodes.BAD_REQUEST, messages.CUSTOMER_NOT_EXISTS)
         }
+        const files = req.files as [Express.Multer.File]
+        const images = files.map((file: Express.Multer.File) => file.filename)
+
+        const createdFood = await Food.create({
+            vendorId: vendor._id,
+            name: name,
+            description: description,
+            category: category,
+            foodType: foodType,
+            readyTime: readyTime,
+            price: price,
+            rating: 0,
+            images: images,
+        })
+
+        vendor.foods.push(createdFood);
+        const result = await vendor.save();
+        return result
     },
 
     /**

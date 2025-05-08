@@ -41,7 +41,13 @@ export const messages = {
     CUSTOMER_LOGIN_FAILED: 'Customer Login Failed',
     OTP_SEND_SUCCESSFULLY: 'Otp Sent Successfully',
     CUSTOMER_EDIT_SUCCESS: 'Customer Edit Success',
+    FOOD_NOT_FOUND: 'Food could not be found',
 
     // Order
     ORDER_CREATED: 'Order Created',
+
+    // Cart
+    ADDED_TO_CART: 'Item Added to Cart',
+    FETCHED_CART: 'Items fetched from Cart',
+
 }
