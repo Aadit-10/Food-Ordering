@@ -112,3 +112,49 @@ export const getFood = async (req: Request, res: Response): Promise<any> => {
 
     }
 };
+
+/**---------------- Orders ---------------- **/
+
+/**
+ * Function to Get Current Order
+ *
+ * @param req
+ * @param res
+ */
+export const getCurrentOrders = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const orders = await VendorService.getCurrentOrders(req);
+        return sendResponse(res, StatusCodes.OK, messages.ORDER_FETCHED, { orders });
+    } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
+    }
+};
+
+/**
+ * Description
+*
+* @param req
+* @param res
+*/
+export const getOrderDetails = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const order = await VendorService.GetOrderDetails(req);
+        return sendResponse(res, StatusCodes.OK, messages.ORDER_FETCHED, { order });
+    } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
+    }
+};
+
+/**
+ * Description
+ *
+ * @param req
+ * @param res
+ */
+export const ProcessOrder = async (req: Request, res: Response): Promise<any> => {
+    try {
+
+    } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
+    }
+};

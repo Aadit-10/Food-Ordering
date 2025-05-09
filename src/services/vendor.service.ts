@@ -5,6 +5,7 @@ import { customError, generateToken, validatePassword } from "../utils";
 import { StatusCodes } from "http-status-codes";
 import { messages } from "../common/constants";
 import { createFoodInput } from "../dto/Food.dto";
+import { Order } from "../models/order.model";
 
 const findVendorByEmail = async (email) => {
     const vendorExists = await Vendor.findOne({
@@ -183,5 +184,50 @@ export const VendorService = {
         }
         customError(StatusCodes.BAD_REQUEST, messages.SOMETHING_WENT_WRONG)
 
+    },
+
+    /**
+    * Function to Current Orders
+    *
+    * @param req
+    * @returns orders
+    */
+    getCurrentOrders: async (req: Request) => {
+        const user: any = req.user;
+        const orders = await Order.find({ vendorId: user._id }).populate('items.food');
+        if (orders === null) {
+            customError(StatusCodes.BAD_REQUEST, messages.ORDER_NOT_FOUND)
+        }
+        return orders
+    },
+
+    /**
+    * Function to Get Order Details
+    *
+    * @param req
+    * @returns order
+    */
+    GetOrderDetails: async (req: Request) => {
+        const orderId: any = req.params.id;
+        const order = await Order.findById({ orderId }).populate('items.food');
+        if (order === null) {
+            customError(StatusCodes.BAD_REQUEST, messages.ORDER_NOT_FOUND)
+        }
+        return order
+    },
+
+    /**
+    * Function to Get Order Details
+    *
+    * @param req
+    * @returns order
+    */
+    ProcessOrder: async (req: Request) => {
+        const orderId: any = req.params.id;
+        // const order = await Order.findById({ orderId }).populate('items.food');
+        // if (order === null) {
+        //     customError(StatusCodes.BAD_REQUEST, messages.ORDER_NOT_FOUND)
+        // }
+        // return order
     },
 }
