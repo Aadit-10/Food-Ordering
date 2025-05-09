@@ -48,6 +48,7 @@ export const messages = {
     ORDER_NOT_FOUND: 'Order Not Found',
     ORDER_FETCHED: 'Orders Fetched Successfully',
     ORDER_FOUND: 'Order Found',
+    ORDER_PROCESSED: 'Order Processed',
 
     // Cart
     ADDED_TO_CART: 'Item Added to Cart',

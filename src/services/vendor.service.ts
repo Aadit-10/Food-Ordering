@@ -209,25 +209,33 @@ export const VendorService = {
     */
     GetOrderDetails: async (req: Request) => {
         const orderId: any = req.params.id;
-        const order = await Order.findById({ orderId }).populate('items.food');
-        if (order === null) {
+        const order = await Order.findById(orderId).populate('items.food');
+        console.log("order", order);
+        if (!order) {
             customError(StatusCodes.BAD_REQUEST, messages.ORDER_NOT_FOUND)
         }
         return order
     },
 
     /**
-    * Function to Get Order Details
+    * Function to Process Orders ie Change status, add remarks & readyTime
     *
     * @param req
-    * @returns order
+    * @returns orderResult
     */
     ProcessOrder: async (req: Request) => {
         const orderId: any = req.params.id;
-        // const order = await Order.findById({ orderId }).populate('items.food');
-        // if (order === null) {
-        //     customError(StatusCodes.BAD_REQUEST, messages.ORDER_NOT_FOUND)
-        // }
-        // return order
+        const { status, remarks, readyTime } = req.body;
+
+        const order = await Order.findById(orderId).populate('items.food');
+        order.orderStatus = status;
+        order.remarks = remarks;
+        order.readyTime = readyTime;
+
+        const orderResult = await order.save();
+        if (!orderResult) {
+            customError(StatusCodes.BAD_REQUEST, messages.SOMETHING_WENT_WRONG)
+        }
+        return orderResult
     },
 }

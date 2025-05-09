@@ -153,7 +153,8 @@ export const getOrderDetails = async (req: Request, res: Response): Promise<any>
  */
 export const ProcessOrder = async (req: Request, res: Response): Promise<any> => {
     try {
-
+        const orderResult = await VendorService.ProcessOrder(req);
+        return sendResponse(res, StatusCodes.OK, messages.ORDER_PROCESSED, orderResult);
     } catch (error) {
         return sendResponse(res, error.statusCode, error.message)
     }

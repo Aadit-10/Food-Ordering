@@ -201,13 +201,16 @@ export const CustomerService = {
 
         let cartItems = Array();
         let netAmount = 0.0;
+        let vendorId;
 
         const foods = await Food.find().where('_id').in(cart.map(item => item._id)).exec();
 
         foods.map(food => {
             cart.map(({ _id, unit }) => {
                 if (food._id == _id) {
+                    vendorId = food.vendorId;
                     netAmount += (food.price * unit)
+                    cartItems.push({ food, unit })
                 }
             })
         });
@@ -215,6 +218,7 @@ export const CustomerService = {
         if (cartItems) {
             const currentOrder = await Order.create({
                 orderId: orderId,
+                vendorId: vendorId,
                 items: cartItems,
                 totalAmount: netAmount,
                 orderDate: new Date(),
@@ -222,6 +226,8 @@ export const CustomerService = {
                 paymentResponse: 'Good',
                 orderStatus: 'Waiting',
             })
+
+            profile.cart = [] as any;
 
             if (currentOrder) {
                 profile.orders.push(currentOrder)

@@ -19,6 +19,6 @@ router.get('/getFood', getFood)
 
 router.get('/orders', getCurrentOrders);
 router.get('/order/:id', getOrderDetails)
-router.get('/order/:id/process', ProcessOrder)
+router.put('/order/:id/process', ProcessOrder)
 
 export default router;

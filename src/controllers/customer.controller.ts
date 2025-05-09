@@ -128,8 +128,8 @@ export const EditCustomerProfile = async (req: Request, res: Response): Promise<
  */
 export const createOrder = async (req: Request, res: Response): Promise<any> => {
     try {
-        await CustomerService.createOrder(req);
-        return sendResponse(res, StatusCodes.CREATED, messages.ORDER_CREATED);
+        const order = await CustomerService.createOrder(req);
+        return sendResponse(res, StatusCodes.CREATED, messages.ORDER_CREATED, { order });
     } catch (error) {
         return sendResponse(res, error.statusCode, error.message)
     }
