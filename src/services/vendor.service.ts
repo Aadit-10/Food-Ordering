@@ -1,6 +1,6 @@
 import { Request } from "express";
-import { CreateVendorInput, EditVendorInput, VendorLogin } from "../dto";
-import { Food, Vendor } from "../models";
+import { CreateOfferInput, CreateVendorInput, EditVendorInput, VendorLogin } from "../dto";
+import { Food, Offer, Vendor } from "../models";
 import { customError, generateToken, validatePassword } from "../utils";
 import { StatusCodes } from "http-status-codes";
 import { messages } from "../common/constants";
@@ -89,6 +89,7 @@ export const VendorService = {
         customError(StatusCodes.BAD_REQUEST, messages.VENDOR_NOT_EXIST)
 
     },
+
     /**
    * Function to Update Vendor Cover Image
    *
@@ -210,7 +211,6 @@ export const VendorService = {
     GetOrderDetails: async (req: Request) => {
         const orderId: any = req.params.id;
         const order = await Order.findById(orderId).populate('items.food');
-        console.log("order", order);
         if (!order) {
             customError(StatusCodes.BAD_REQUEST, messages.ORDER_NOT_FOUND)
         }
@@ -237,5 +237,66 @@ export const VendorService = {
             customError(StatusCodes.BAD_REQUEST, messages.SOMETHING_WENT_WRONG)
         }
         return orderResult
+    },
+
+    /**
+    * Function to GetOffers
+    *
+    * @param req
+    * @returns 
+    */
+    GetOffers: async (req: Request) => {
+        const user = req.user;
+
+        const offers = await Offer.find({ isActive: true }).populate('vendors');
+        const currentOffers = offers.filter(offer => {
+            if (offer.offerType === 'GENERIC') return true;
+
+            return offer.vendors?.some(vendor => vendor._id.toString() === user._id);
+        });
+
+        return currentOffers
+    },
+
+    /**
+    * Function to Add Offers
+    *
+    * @param req
+    * @returns 
+    */
+    AddOffer: async (req: Request) => {
+        const user = req.user;
+        const {
+            title, description, offerType, offerAmount,
+            pincode, promoCode, promoType, startValidity,
+            endValidity, bank, bins, minValue, isActive
+        } = <CreateOfferInput>req.body
+
+        const vendor = await findVendorById(user._id);
+        if (!vendor) {
+            customError(StatusCodes.BAD_REQUEST, messages.VENDOR_NOT_EXIST)
+        }
+
+        const offer = await Offer.create({
+            title, description, offerType, offerAmount,
+            pincode, promoCode, promoType, startValidity,
+            endValidity, bank, bins, minValue, isActive,
+            vendors: [vendor]
+        });
+
+        if (!offer) {
+            customError(StatusCodes.BAD_REQUEST, messages.OFFER_NOT_CREATED)
+        }
+    },
+
+    /**
+    * Function to Edit Offers
+    *
+    * @param req
+    * @returns 
+    */
+    EditOffer: async (req: Request) => {
+        const user = req.user;
+
     },
 }

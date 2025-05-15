@@ -131,11 +131,11 @@ export const getCurrentOrders = async (req: Request, res: Response): Promise<any
 };
 
 /**
- * Description
-*
-* @param req
-* @param res
-*/
+ * Function to Get Order Details
+ *
+ * @param req
+ * @param res
+ */
 export const getOrderDetails = async (req: Request, res: Response): Promise<any> => {
     try {
         const order = await VendorService.GetOrderDetails(req);
@@ -146,7 +146,7 @@ export const getOrderDetails = async (req: Request, res: Response): Promise<any>
 };
 
 /**
- * Description
+ * Function to Get Process an Order
  *
  * @param req
  * @param res
@@ -155,6 +155,53 @@ export const ProcessOrder = async (req: Request, res: Response): Promise<any> =>
     try {
         const orderResult = await VendorService.ProcessOrder(req);
         return sendResponse(res, StatusCodes.OK, messages.ORDER_PROCESSED, orderResult);
+    } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
+    }
+};
+
+/**---------------- Offers ---------------- **/
+
+/**
+ * Function to Get Offers
+ *
+ * @param req
+ * @param res
+ */
+export const GetOffers = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const Offers = await VendorService.GetOffers(req);
+        return sendResponse(res, StatusCodes.OK, messages.OFFER_FETCHED, { Offers });
+    } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
+    }
+};
+
+/**
+ * Function to Add Offers
+ *
+ * @param req
+ * @param res
+ */
+export const AddOffer = async (req: Request, res: Response): Promise<any> => {
+    try {
+        await VendorService.AddOffer(req);
+        return sendResponse(res, StatusCodes.OK, messages.OFFER_CREATED);
+    } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
+    }
+};
+
+/**
+ * Function to Edit Offers
+ *
+ * @param req
+ * @param res
+ */
+export const EditOffer = async (req: Request, res: Response): Promise<any> => {
+    try {
+        await VendorService.EditOffer(req);
+        return sendResponse(res, StatusCodes.OK, messages.OFFER_EDITED);
     } catch (error) {
         return sendResponse(res, error.statusCode, error.message)
     }

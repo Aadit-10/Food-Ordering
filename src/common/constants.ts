@@ -54,4 +54,12 @@ export const messages = {
     ADDED_TO_CART: 'Item Added to Cart',
     FETCHED_CART: 'Items fetched from Cart',
     DELETE_CART: 'Cart Deleted',
+
+    // Offer
+    OFFER_CREATED: 'Offer Created Successfully',
+    OFFER_NOT_CREATED: 'Offer Not Created',
+    OFFER_DELETED: 'Offer Deleted Successfully',
+    OFFER_EDITED: 'Offer Edited Successfully',
+    OFFER_FETCHED: 'Offer Fetched Successfully',
+
 }

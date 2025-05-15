@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addFood, getCurrentOrders, getFood, getOrderDetails, ProcessOrder, updateVendor, updateVendorCoverImage, updateVendorService, vendorLogin, vendorProfile } from "../controllers";
+import { addFood, AddOffer, EditOffer, getCurrentOrders, getFood, GetOffers, getOrderDetails, ProcessOrder, updateVendor, updateVendorCoverImage, updateVendorService, vendorLogin, vendorProfile } from "../controllers";
 import { Authenticate } from "../middlewares";
 import { upload } from "../middlewares";
 
@@ -18,7 +18,12 @@ router.get('/getFood', getFood)
 // Orders 
 
 router.get('/orders', getCurrentOrders);
-router.get('/order/:id', getOrderDetails)
-router.put('/order/:id/process', ProcessOrder)
+router.get('/order/:id', getOrderDetails);
+router.put('/order/:id/process', ProcessOrder);
+
+// Offers
+router.get('/offers', GetOffers);
+router.post('/addOffer', AddOffer);
+router.put('/offer/:id', EditOffer);
 
 export default router;
