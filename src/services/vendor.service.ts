@@ -297,6 +297,36 @@ export const VendorService = {
     */
     EditOffer: async (req: Request) => {
         const user = req.user;
+        const offerId = req.params.id;
+        const {
+            title, description, offerType, offerAmount,
+            pincode, promoCode, promoType, startValidity,
+            endValidity, bank, bins, minValue, isActive
+        } = <CreateOfferInput>req.body
 
+        const currentOffer = await Offer.findById(offerId);
+        if (!currentOffer) {
+            customError(StatusCodes.BAD_REQUEST, messages.OFFER_NOT_EXIST)
+        }
+        const fields = {
+            ...(title && { title }),
+            ...(description && { description }),
+            ...(offerType && { offerType }),
+            ...(offerAmount && { offerAmount }),
+            ...(pincode && { pincode }),
+            ...(promoCode && { promoCode }),
+            ...(promoType && { promoType }),
+            ...(startValidity && { startValidity }),
+            ...(endValidity && { endValidity }),
+            ...(bank && { bank }),
+            ...(bins && { bins }),
+            ...(minValue && { minValue }),
+            ...(isActive && { isActive }),
+        }
+        const newOffer = await Offer.findByIdAndUpdate({ _id: offerId }, { $set: fields }, { new: true });
+        if (!newOffer) {
+            customError(StatusCodes.BAD_REQUEST, messages.OFFER_NOT_EDITED)
+        }
+        return newOffer
     },
 }

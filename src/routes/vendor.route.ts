@@ -24,6 +24,6 @@ router.put('/order/:id/process', ProcessOrder);
 // Offers
 router.get('/offers', GetOffers);
 router.post('/addOffer', AddOffer);
-router.put('/offer/:id', EditOffer);
+router.put('/editOffer/:id', EditOffer);
 
 export default router;

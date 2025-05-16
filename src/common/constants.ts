@@ -60,6 +60,8 @@ export const messages = {
     OFFER_NOT_CREATED: 'Offer Not Created',
     OFFER_DELETED: 'Offer Deleted Successfully',
     OFFER_EDITED: 'Offer Edited Successfully',
+    OFFER_NOT_EDITED: 'Offer Edited UnSuccessfully',
     OFFER_FETCHED: 'Offer Fetched Successfully',
+    OFFER_NOT_EXIST: 'Offer does not exist',
 
 }

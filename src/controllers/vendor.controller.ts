@@ -200,8 +200,8 @@ export const AddOffer = async (req: Request, res: Response): Promise<any> => {
  */
 export const EditOffer = async (req: Request, res: Response): Promise<any> => {
     try {
-        await VendorService.EditOffer(req);
-        return sendResponse(res, StatusCodes.OK, messages.OFFER_EDITED);
+        const newOffer = await VendorService.EditOffer(req);
+        return sendResponse(res, StatusCodes.OK, messages.OFFER_EDITED, { newOffer });
     } catch (error) {
         return sendResponse(res, error.statusCode, error.message)
     }
