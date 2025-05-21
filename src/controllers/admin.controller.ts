@@ -33,3 +33,21 @@ export const GetVendorById = async (req: Request, res: Response): Promise<any> =
         return sendResponse(res, error.statusCode, error.message)
     }
 };
+
+export const GetTransactions = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const transactions = await AdminService.getTransactions(req);
+        return sendResponse(res, StatusCodes.OK, messages.TRANSACTION_FETCHED, { transactions })
+    } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
+    }
+};
+
+export const GetTransactionById = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const transaction = await AdminService.getTransactionById(req);
+        return sendResponse(res, StatusCodes.OK, messages.TRANSACTION_FETCHED, { transaction })
+    } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
+    }
+};

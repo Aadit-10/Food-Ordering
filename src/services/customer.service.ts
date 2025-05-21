@@ -1,12 +1,34 @@
 import { plainToClass } from "class-transformer";
 import { Request } from "express";
-import { createCustomerInputs, EditCustomerProfileInputs, OrderInputs, UserLoginInputs, } from "../dto";
+import { CartItem, createCustomerInputs, EditCustomerProfileInputs, OrderInputs, UserLoginInputs, } from "../dto";
 import { validate } from "class-validator";
 import { customError, GenerateOtp, generatePassword, generateSalt, generateToken, validatePassword } from "../utils";
 import { StatusCodes } from "http-status-codes";
 import { messages } from "../common/constants";
-import { Customer, Food } from "../models";
-import { Order } from "../models/order.model";
+import { Customer, Food, Offer, Order, Transcation, Vendor } from "../models";
+
+const validateTransaction = async (txnId: string) => {
+    const currentTransaction = await Transcation.findById(txnId);
+    if (!currentTransaction) {
+        customError(StatusCodes.BAD_REQUEST, messages.TRANSACTION_NOT_FOUND)
+    }
+    if (currentTransaction.status.toLowerCase() !== 'failed') {
+        return { status: true, currentTransaction }
+    }
+
+    return { status: false, currentTransaction }
+}
+
+const assignOrderForDelivery = async (orderId: string, vendorId: string) => {
+    const vendor = await Vendor.findById(vendorId)
+    if (!vendor) {
+        customError(StatusCodes.BAD_REQUEST, messages.VENDOR_NOT_EXIST)
+    }
+
+    const areaCode = vendor.pincode;
+    const vendorLat = vendor.lat;
+    const vendorLng = vendor.lng;
+}
 
 export const CustomerService = {
 
@@ -194,19 +216,24 @@ export const CustomerService = {
     */
     createOrder: async (req: Request) => {
         const customer = req.user;
+
+        const { txnId, amount, items } = <OrderInputs>req.body;
+        const { status, currentTransaction } = await validateTransaction(txnId)
+        if (!status) {
+            customError(StatusCodes.BAD_REQUEST, messages.TRANSACTION_NOT_FOUND)
+        }
+
         const orderId = `${Math.floor(Math.random() * 89999 + 1000)}`;
         const profile = await Customer.findById(customer._id);
-
-        const cart = <[OrderInputs]>req.body;
 
         let cartItems = Array();
         let netAmount = 0.0;
         let vendorId;
 
-        const foods = await Food.find().where('_id').in(cart.map(item => item._id)).exec();
+        const foods = await Food.find().where('_id').in(items.map(item => item._id)).exec();
 
         foods.map(food => {
-            cart.map(({ _id, unit }) => {
+            items.map(({ _id, unit }) => {
                 if (food._id == _id) {
                     vendorId = food.vendorId;
                     netAmount += (food.price * unit)
@@ -216,24 +243,34 @@ export const CustomerService = {
         });
 
         if (cartItems) {
-            const currentOrder = await Order.create({
+            const currentOrder: any = await Order.create({
                 orderId: orderId,
                 vendorId: vendorId,
                 items: cartItems,
                 totalAmount: netAmount,
+                paidAmount: amount,
                 orderDate: new Date(),
-                paidThrough: 'COD',
-                paymentResponse: 'Good',
                 orderStatus: 'Waiting',
+                remarks: '',
+                deliveryId: '',
+                readyTime: 45,
             })
 
             profile.cart = [] as any;
+
+            currentTransaction.vendorId = vendorId;
+            currentTransaction.orderId = orderId;
+            currentTransaction.status = messages.CONFIRMED
+            await currentTransaction.save()
+
+            assignOrderForDelivery(currentOrder._id, vendorId);
 
             if (currentOrder) {
                 profile.orders.push(currentOrder)
                 await profile.save();
                 return currentOrder
             }
+
         }
 
     },
@@ -278,7 +315,7 @@ export const CustomerService = {
         if (!profile) {
             customError(StatusCodes.BAD_REQUEST, messages.CUSTOMER_NOT_EXISTS)
         }
-        const { _id, unit } = <OrderInputs>req.body;
+        const { _id, unit } = <CartItem>req.body;
         const food = await Food.findById(_id);
         if (!food) {
             customError(StatusCodes.BAD_REQUEST, messages.FOOD_NOT_FOUND)
@@ -336,4 +373,64 @@ export const CustomerService = {
         profile.cart = [] as any;
         await profile.save();
     },
+
+    /**
+    * Function for Deleting Cart
+    *
+    * @param req
+    * @returns 
+    */
+    verifyOffer: async (req: Request) => {
+        const offerId: any = req.params.id;
+
+        const appliedOffer = await Offer.findById(offerId)
+        if (!appliedOffer) {
+            customError(StatusCodes.BAD_REQUEST, messages.OFFER_NOT_VALID)
+        }
+
+        if (appliedOffer.promoType === 'USER') {
+            // Offer can be applied only once
+        } else {
+            if (appliedOffer.isActive) {
+                return appliedOffer
+            } else {
+                customError(StatusCodes.OK, messages.OFFER_NOT_VALID)
+            }
+        }
+    },
+
+    /**
+    * Function for Creating Payment
+    *
+    * @param req
+    * @returns 
+    */
+    createPayment: async (req: Request) => {
+        const user = req.user;
+        const { amount, paymentMode, offerId } = req.body;
+        let payableAmount = Number(amount);
+        if (offerId) {
+            const appliedOffer = await Offer.findById(offerId);
+            if (appliedOffer) {
+                payableAmount -= appliedOffer.offerAmount
+            }
+        }
+
+        // Perform Payment gateway Charge API call
+
+        // Create Record of transcation
+        const transaction = await Transcation.create({
+            customer: user._id,
+            vendorId: '',
+            orderId: '',
+            orderValue: payableAmount,
+            offerUsed: offerId || 'NA',
+            status: 'OPEN', //Failed // Success
+            paymentMode: paymentMode,
+            paymentResponse: 'Payment is COD'
+        })
+        // return trasactionId 
+        return transaction
+    },
+
 }

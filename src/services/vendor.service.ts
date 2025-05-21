@@ -122,16 +122,21 @@ export const VendorService = {
     */
     updateVendorService: async (req: Request) => {
         const user = req.user
+        const { lat, lng } = req.body;
         if (user) {
             const existingVendor = await findVendorById(user._id)
-            if (existingVendor) {
-                existingVendor.serviceAvailable = !existingVendor.serviceAvailable;
-
-                const savedResult = await existingVendor.save();
-                return savedResult
+            if (!existingVendor) {
+                customError(StatusCodes.BAD_REQUEST, messages.VENDOR_NOT_EXIST)
             }
+            if (lat & lng) {
+                existingVendor.lat = lat;
+                existingVendor.lng = lng;
+            }
+            existingVendor.serviceAvailable = !existingVendor.serviceAvailable;
+
+            const savedResult = await existingVendor.save();
+            return savedResult
         }
-        customError(StatusCodes.BAD_REQUEST, messages.VENDOR_NOT_EXIST)
 
     },
 
@@ -308,7 +313,7 @@ export const VendorService = {
         if (!currentOffer) {
             customError(StatusCodes.BAD_REQUEST, messages.OFFER_NOT_EXIST)
         }
-        const fields = {
+        const fields: Partial<CreateOfferInput> = {
             ...(title && { title }),
             ...(description && { description }),
             ...(offerType && { offerType }),

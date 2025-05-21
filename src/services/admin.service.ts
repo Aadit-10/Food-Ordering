@@ -4,6 +4,7 @@ import { Vendor } from "../models";
 import { customError, generatePassword, generateSalt, generateToken, validatePassword } from "../utils";
 import { StatusCodes } from "http-status-codes";
 import { messages } from "../common/constants";
+import { Transcation } from "../models/transaction.model";
 
 const findVendorByEmail = async (email) => {
     const vendorExists = await Vendor.findOne({
@@ -52,7 +53,7 @@ export const AdminService = {
         const createdVendor = await Vendor.create({
             name, ownerName, phone, address, email,
             salt, password: userPassword, pincode, foodTypes,
-            foods: []
+            foods: [], lat: 0, lng: 0
         });
         return createdVendor
     },
@@ -98,5 +99,36 @@ export const AdminService = {
         }
 
         return vendor
-    }
+    },
+    /**
+    * Function to get transactions
+    * 
+    * @param req
+    * @returns vendor
+    */
+    getTransactions: async (req: Request) => {
+        const transactions = await Transcation.find();
+        if (!transactions) {
+            customError(StatusCodes.BAD_REQUEST, messages.TRANSACTION_NOT_FOUND)
+        }
+
+        return transactions
+    },
+    /**
+    * Function to get transaction by Id
+    * 
+    * @param req
+    * @returns vendor
+    */
+    getTransactionById: async (req: Request) => {
+
+        const transactionId = req.params.id;
+
+        const transaction = await Transcation.findById(transactionId);
+        if (!transaction) {
+            customError(StatusCodes.BAD_REQUEST, messages.TRANSACTION_NOT_FOUND)
+        }
+
+        return transaction
+    },
 }

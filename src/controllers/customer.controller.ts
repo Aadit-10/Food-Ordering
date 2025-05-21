@@ -210,3 +210,32 @@ export const DeleteCart = async (req: Request, res: Response): Promise<any> => {
     }
 };
 
+/**
+ * Function for Verifying offer
+ *
+ * @param req
+ * @param res
+ */
+export const VerifyOffer = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const offer = await CustomerService.verifyOffer(req);
+        return sendResponse(res, StatusCodes.OK, messages.OFFER_VERIFIED, { offer });
+    } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
+    }
+};
+
+/**
+ * Function for Creating Payment
+ *
+ * @param req
+ * @param res
+ */
+export const CreatePayment = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const transaction = await CustomerService.createPayment(req);
+        return sendResponse(res, StatusCodes.OK, messages.PAYMENT_CREATED, { transaction });
+    } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
+    }
+};

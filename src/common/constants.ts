@@ -5,6 +5,7 @@ export const messages = {
     NOT_AUTHORISED: 'User Not Authorised',
     SOMETHING_WENT_WRONG: 'Something went Wrong',
     DATA_NOT_FOUND: 'Data not Found',
+    CONFIRMED: 'Confirmed',
 
     // Vendor
     LOGIN_VENDOR: 'Vendor Login Succesfully.',
@@ -29,6 +30,8 @@ export const messages = {
     NO_FOOD_AVAILABLE: 'No Food Available in Region',
     TOP_RESTAURANTS_FOUND: 'Top Restaurants Found',
     RESTAURANTS_FOUND: 'Restaurants Found',
+    FOOD_AVAILABILITY_30: 'Food Availability in 30 min Found',
+
 
     // Customer
     CUSTOMER_SIGNUP: 'Customer Sign up Success',
@@ -63,5 +66,17 @@ export const messages = {
     OFFER_NOT_EDITED: 'Offer Edited UnSuccessfully',
     OFFER_FETCHED: 'Offer Fetched Successfully',
     OFFER_NOT_EXIST: 'Offer does not exist',
+    OFFER_AVAILABILITY_REGION: 'Offers Availability of Region Found',
+    OFFER_VERIFIED: 'Offer Verified',
+    OFFER_NOT_VERIFIED: 'Offer not Verified',
+    OFFER_NOT_VALID: 'Offer not Valid',
+
+    // Payment
+    PAYMENT_CREATED: 'Payment Created Successfully',
+
+    // Transaction
+    TRANSACTION_NOT_FOUND: 'Transaction Not Found',
+    TRANSACTION_FETCHED: 'Transaction Fetched Successfully',
+
 
 }

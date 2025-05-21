@@ -1,8 +1,9 @@
 import { Router } from "express";
 import {
-    createOrder, customerLogin, customerSignup, customerVerify,
+    createOrder, CreatePayment, customerLogin, customerSignup, customerVerify,
     DeleteCart, EditCustomerProfile, GetCart, GetCustomerProfile,
-    GetOrder, GetOrderById, RequestOtp, UpdateCart
+    GetOrder, GetOrderById, RequestOtp, UpdateCart,
+    VerifyOffer
 } from "../controllers";
 import { Authenticate } from "../middlewares";
 
@@ -31,7 +32,11 @@ router.post('/updateCart', UpdateCart);
 router.get('/getFromCart', GetCart);
 router.delete('/deleteCart', DeleteCart);
 
+// Apply Offers
+router.get('/offer/verify/:id', VerifyOffer);
+
 // Payment
+router.post('/create-payment', CreatePayment);
 
 // Order
 

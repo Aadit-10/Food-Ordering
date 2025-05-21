@@ -1,5 +1,5 @@
 import express, { Request, Router, Response, NextFunction } from "express";
-import { FoodDoc, Vendor } from "../models";
+import { FoodDoc, Offer, Vendor } from "../models";
 import { customError } from "../utils";
 import { StatusCodes } from "http-status-codes";
 import { messages } from "../common/constants";
@@ -95,6 +95,24 @@ export const ShoppingService = {
 
         return foodResult
     },
+
+    /**
+    * Function to Search Offers 
+    *
+    * @param req
+    * @returns foodResult
+    */
+    searchOffers: async (req: Request) => {
+        const pincode = req.params.pincode;
+
+        const offers = await Offer.find({ pincode, isActive: true })
+        if (!offers) {
+            customError(StatusCodes.BAD_REQUEST, messages.DATA_NOT_FOUND)
+        }
+
+        return offers
+    },
+
     /**
     * Function to Find Restaurants by Id
     *

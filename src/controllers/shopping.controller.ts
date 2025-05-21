@@ -43,7 +43,7 @@ export const getTopRestaurants = async (req: Request, res: Response): Promise<an
 export const getFoodIn30Min = async (req: Request, res: Response): Promise<any> => {
     try {
         const foodIn30Min = await ShoppingService.getFoodIn30Min(req);
-        return sendResponse(res, StatusCodes.OK, messages.FOOD_AVAILABILITY, { foodIn30Min })
+        return sendResponse(res, StatusCodes.OK, messages.FOOD_AVAILABILITY_30, { foodIn30Min })
     } catch (error) {
         return sendResponse(res, error.statusCode, error.message)
     }
@@ -65,6 +65,21 @@ export const searchFoods = async (req: Request, res: Response): Promise<any> => 
 };
 
 /**
+* Function to search Offers
+*
+* @param req
+* @param res
+*/
+export const searchOffers = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const offers = await ShoppingService.searchOffers(req);
+        return sendResponse(res, StatusCodes.OK, messages.OFFER_AVAILABILITY_REGION, { offers })
+    } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
+    }
+};
+
+/**
 * Description
 *
 * @param req
@@ -73,7 +88,7 @@ export const searchFoods = async (req: Request, res: Response): Promise<any> => 
 export const RestaurantById = async (req: Request, res: Response): Promise<any> => {
     try {
         const restaurants = await ShoppingService.RestaurantById(req);
-        return sendResponse(res, StatusCodes.OK, messages.FOOD_AVAILABILITY, { restaurants })
+        return sendResponse(res, StatusCodes.OK, messages.RESTAURANTS_FOUND, { restaurants })
     } catch (error) {
         return sendResponse(res, error.statusCode, error.message)
     }
