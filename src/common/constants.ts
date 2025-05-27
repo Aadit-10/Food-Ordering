@@ -78,5 +78,10 @@ export const messages = {
     TRANSACTION_NOT_FOUND: 'Transaction Not Found',
     TRANSACTION_FETCHED: 'Transaction Fetched Successfully',
 
-
+    // Delivery 
+    DELIVERY_USER_EXISTS: 'Delivery User Already Exists',
+    DELIVERY_USER_SIGNUP: 'Delivery User Sign up Success',
+    DELIVERY_USER_SIGNUP_FAILED: 'Delivery User Sign up Failed',
+    DELIVERY_USER_LOGIN_SUCCESS: 'Delivery User Login Success',
+    DELIVERY_USER_LOGIN_FAILED: 'Delivery User Login Failed',
 }
