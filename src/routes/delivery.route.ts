@@ -1,7 +1,8 @@
 import { Router } from "express";
 import {
     DeliveryUserLogin, DeliveryUserSignup, EditCustomerProfile,
-    GetCustomerProfile, UpdateDeliveryUserStatus,
+    EditDeliveryUserProfile,
+    GetCustomerProfile, GetDeliveryUserProfile, UpdateDeliveryUserStatus,
 } from "../controllers";
 import { Authenticate } from "../middlewares";
 
@@ -25,8 +26,8 @@ router.put('/change-status', UpdateDeliveryUserStatus);
 
 /**---------------- Profile ---------------- **/
 
-router.get('/profile', GetCustomerProfile);
-router.patch('/editProfile', EditCustomerProfile);
+router.get('/profile', GetDeliveryUserProfile);
+router.patch('/editProfile', EditDeliveryUserProfile);
 
 
 export default router;

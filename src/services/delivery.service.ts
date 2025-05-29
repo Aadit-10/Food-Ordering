@@ -78,15 +78,14 @@ export const DeliveryService = {
     * @returns profile
     */
     GetDeliveryUserProfile: async (req: Request) => {
-        const customer = req.user;
+        const user = req.user;
 
-        const profile = await Delivery.findById(customer._id);
+        const profile = await Delivery.findById(user._id);
         if (!profile) {
             customError(StatusCodes.BAD_REQUEST, messages.CUSTOMER_NOT_EXISTS)
         }
 
         return profile
-
     },
 
     /**
@@ -96,10 +95,10 @@ export const DeliveryService = {
     * @returns 
     */
     EditDeliveryUserProfile: async (req: Request, editInputs: EditCustomerProfileInputs) => {
-        const customer = req.user;
+        const user = req.user;
         const { firstName, lastName, address } = editInputs;
 
-        const profile = await Delivery.findById(customer._id);
+        const profile = await Delivery.findById(user._id);
         if (!profile) {
             customError(StatusCodes.BAD_REQUEST, messages.CUSTOMER_NOT_EXISTS)
         }
@@ -109,6 +108,7 @@ export const DeliveryService = {
         profile.address = address;
 
         await profile.save()
+        return profile
 
     },
     /**
@@ -118,8 +118,20 @@ export const DeliveryService = {
     * @returns 
     */
     updateDeliveryUserStatus: async (req: Request) => {
+        const user = req.user;
+        const { lat, lng } = req.body;
 
+        const profile = await Delivery.findById(user._id);
+        if (!profile) {
+            customError(StatusCodes.BAD_REQUEST, messages.CUSTOMER_NOT_EXISTS)
+        }
 
+        profile.lat = lat;
+        profile.lng = lng;
+        profile.isAvailable = !profile.isAvailable;
+
+        const result = await profile.save();
+        return result
     },
 
 

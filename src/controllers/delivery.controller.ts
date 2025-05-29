@@ -66,7 +66,7 @@ export const DeliveryUserLogin = async (req: Request, res: Response): Promise<an
 export const GetDeliveryUserProfile = async (req: Request, res: Response): Promise<any> => {
     try {
         const profile = await DeliveryService.GetDeliveryUserProfile(req);
-        return sendResponse(res, StatusCodes.OK, messages.CUSTOMER_SIGNUP);
+        return sendResponse(res, StatusCodes.OK, messages.CUSTOMER_SIGNUP, { profile });
     } catch (error) {
         return sendResponse(res, error.statusCode, error.message)
     }
@@ -89,8 +89,8 @@ export const EditDeliveryUserProfile = async (req: Request, res: Response): Prom
             }));
             return sendResponse(res, StatusCodes.BAD_REQUEST, messages.CUSTOMER_LOGIN_FAILED, errorMessages);
         }
-        await DeliveryService.EditDeliveryUserProfile(req, editInputs);
-        // return sendResponse(res, StatusCodes.OK, messages.CUSTOMER_EDIT_SUCCESS);
+        const profile = await DeliveryService.EditDeliveryUserProfile(req, editInputs);
+        return sendResponse(res, StatusCodes.OK, messages.CUSTOMER_EDIT_SUCCESS, { profile });
     } catch (error) {
         return sendResponse(res, error.statusCode, error.message)
     }
@@ -104,9 +104,8 @@ export const EditDeliveryUserProfile = async (req: Request, res: Response): Prom
  */
 export const UpdateDeliveryUserStatus = async (req: Request, res: Response): Promise<any> => {
     try {
-
-        await DeliveryService.updateDeliveryUserStatus(req);
-        // return sendResponse(res, StatusCodes.OK, messages.CUSTOMER_EDIT_SUCCESS);
+        const result = await DeliveryService.updateDeliveryUserStatus(req);
+        return sendResponse(res, StatusCodes.OK, messages.DELIVERY_USER_STATUS_SUCCESS, { result });
     } catch (error) {
         return sendResponse(res, error.statusCode, error.message)
     }
