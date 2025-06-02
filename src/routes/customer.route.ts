@@ -18,13 +18,9 @@ router.post('/login', customerLogin);
 router.use(Authenticate)
 
 router.patch('/verify', customerVerify);
-
 router.get('/otp', RequestOtp);
-
 router.get('/profile', GetCustomerProfile);
-
 router.patch('/editProfile', EditCustomerProfile);
-
 
 // Cart
 

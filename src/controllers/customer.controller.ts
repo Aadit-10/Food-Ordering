@@ -143,8 +143,8 @@ export const createOrder = async (req: Request, res: Response): Promise<any> => 
  */
 export const GetOrder = async (req: Request, res: Response): Promise<any> => {
     try {
-        await CustomerService.getOrder(req);
-        return sendResponse(res, StatusCodes.OK, messages.CUSTOMER_EDIT_SUCCESS);
+        const orders = await CustomerService.getOrder(req);
+        return sendResponse(res, StatusCodes.OK, messages.ORDER_FETCHED, { orders });
     } catch (error) {
         return sendResponse(res, error.statusCode, error.message)
     }
@@ -158,8 +158,8 @@ export const GetOrder = async (req: Request, res: Response): Promise<any> => {
  */
 export const GetOrderById = async (req: Request, res: Response): Promise<any> => {
     try {
-        await CustomerService.getOrderById(req);
-        return sendResponse(res, StatusCodes.OK, messages.CUSTOMER_EDIT_SUCCESS);
+        const orders = await CustomerService.getOrderById(req);
+        return sendResponse(res, StatusCodes.OK, messages.ORDER_FETCHED, { orders });
     } catch (error) {
         return sendResponse(res, error.statusCode, error.message)
     }

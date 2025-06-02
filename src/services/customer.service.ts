@@ -69,7 +69,7 @@ export const CustomerService = {
             customError(StatusCodes.BAD_REQUEST, messages.CUSTOMER_EXISTS)
         }
 
-        const salt = await generateSalt()
+        const salt: any = await generateSalt()
         const userPassword = await generatePassword(password, salt);
 
         const { otp, expiry } = GenerateOtp();
@@ -333,12 +333,15 @@ export const CustomerService = {
      */
     getOrder: async (req: Request) => {
         const customer = req.user;
-        const profile = (await Customer.findById(customer._id)).populated('orders');
+        const profile = await Customer.findById(customer._id).populate('orders');
         if (!profile) {
             customError(StatusCodes.BAD_REQUEST, messages.CUSTOMER_NOT_EXISTS)
         }
+        const orders = await Order.find({ _id: { $in: profile.orders } })
+            .sort({ createdAt: -1 }).populate('items.food');
+
         // add pagination here
-        return profile.orders
+        return orders
     },
 
     /**
@@ -349,7 +352,7 @@ export const CustomerService = {
     */
     getOrderById: async (req: Request) => {
         const orderId: any = req.params.id;
-        const order = await Order.findOne(orderId).populate('items.food')
+        const order = await Order.findById(orderId).populate('items.food')
         return order
     },
 
