@@ -5,7 +5,7 @@ import { validate } from "class-validator";
 import { customError, GenerateOtp, generatePassword, generateSalt, generateToken, validatePassword } from "../utils";
 import { StatusCodes } from "http-status-codes";
 import { messages } from "../common/constants";
-import { Customer, Food, Offer, Order, Transcation, Vendor } from "../models";
+import { Customer, Delivery, Food, Offer, Order, Transcation, Vendor } from "../models";
 
 const validateTransaction = async (txnId: string) => {
     const currentTransaction = await Transcation.findById(txnId);
@@ -28,6 +28,22 @@ const assignOrderForDelivery = async (orderId: string, vendorId: string) => {
     const areaCode = vendor.pincode;
     const vendorLat = vendor.lat;
     const vendorLng = vendor.lng;
+
+    const deliveryPerson = await Delivery.find({ pincode: areaCode, verified: true, isAvailable: true });
+
+    if (!deliveryPerson) {
+        customError(StatusCodes.BAD_REQUEST, messages.CUSTOMER_NOT_EXISTS)
+    }
+    // check the nearest Delivery person and assign the order
+
+    const currentOrder: any = await Order.findById(orderId);
+    if (!currentOrder) {
+        customError(StatusCodes.BAD_REQUEST, messages.ORDER_NOT_FOUND)
+    }
+
+    currentOrder.deliveryId = deliveryPerson[0]._id;
+    await currentOrder.save();
+    // Notify Vendor of Order Recieved
 }
 
 export const CustomerService = {
@@ -206,6 +222,40 @@ export const CustomerService = {
         profile.address = address;
 
         await profile.save()
+    },
+
+    /**
+    * Function for Creating Payment
+    *
+    * @param req
+    * @returns 
+    */
+    createPayment: async (req: Request) => {
+        const user = req.user;
+        const { amount, paymentMode, offerId } = req.body;
+        let payableAmount = Number(amount);
+        if (offerId) {
+            const appliedOffer = await Offer.findById(offerId);
+            if (appliedOffer) {
+                payableAmount -= appliedOffer.offerAmount
+            }
+        }
+
+        // Perform Payment gateway Charge API call
+
+        // Create Record of transcation
+        const transaction = await Transcation.create({
+            customer: user._id,
+            vendorId: '',
+            orderId: '',
+            orderValue: payableAmount,
+            offerUsed: offerId || 'NA',
+            status: 'OPEN', //Failed // Success
+            paymentMode: paymentMode,
+            paymentResponse: 'Payment is COD'
+        })
+        // return trasactionId 
+        return transaction
     },
 
     /**
@@ -399,38 +449,6 @@ export const CustomerService = {
         }
     },
 
-    /**
-    * Function for Creating Payment
-    *
-    * @param req
-    * @returns 
-    */
-    createPayment: async (req: Request) => {
-        const user = req.user;
-        const { amount, paymentMode, offerId } = req.body;
-        let payableAmount = Number(amount);
-        if (offerId) {
-            const appliedOffer = await Offer.findById(offerId);
-            if (appliedOffer) {
-                payableAmount -= appliedOffer.offerAmount
-            }
-        }
 
-        // Perform Payment gateway Charge API call
-
-        // Create Record of transcation
-        const transaction = await Transcation.create({
-            customer: user._id,
-            vendorId: '',
-            orderId: '',
-            orderValue: payableAmount,
-            offerUsed: offerId || 'NA',
-            status: 'OPEN', //Failed // Success
-            paymentMode: paymentMode,
-            paymentResponse: 'Payment is COD'
-        })
-        // return trasactionId 
-        return transaction
-    },
 
 }

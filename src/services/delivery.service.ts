@@ -28,7 +28,7 @@ export const DeliveryService = {
 
         const result = await Delivery.create({
             email, password: userPassword, salt, phone,
-            firstName, lastName, address, verified: false,
+            firstName, lastName, address, pincode, verified: false,
             lat: 0, lng: 0, isAvailable: false
         })
 
@@ -133,7 +133,5 @@ export const DeliveryService = {
         const result = await profile.save();
         return result
     },
-
-
 
 }

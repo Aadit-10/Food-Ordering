@@ -51,3 +51,33 @@ export const GetTransactionById = async (req: Request, res: Response): Promise<a
         return sendResponse(res, error.statusCode, error.message)
     }
 };
+
+/**
+ * Function to verify Delivery User
+ *
+ * @param req
+ * @param res
+ */
+export const VerifyDeliveryUser = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const result = await AdminService.verifyDeliveryUser(req);
+        return sendResponse(res, StatusCodes.OK, messages.DELIVERY_USER_VERIFIED, result)
+    } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
+    }
+};
+
+/**
+ * Function to verify Delivery User
+ *
+ * @param req
+ * @param res
+ */
+export const GetDeliveryUsers = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const result = await AdminService.getDeliveryUsers(req);
+        return sendResponse(res, StatusCodes.OK, messages.DELIVERY_USER_VERIFIED, result)
+    } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
+    }
+};

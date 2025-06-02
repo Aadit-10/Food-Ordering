@@ -123,20 +123,19 @@ export const VendorService = {
     updateVendorService: async (req: Request) => {
         const user = req.user
         const { lat, lng } = req.body;
-        if (user) {
-            const existingVendor = await findVendorById(user._id)
-            if (!existingVendor) {
-                customError(StatusCodes.BAD_REQUEST, messages.VENDOR_NOT_EXIST)
-            }
-            if (lat & lng) {
-                existingVendor.lat = lat;
-                existingVendor.lng = lng;
-            }
-            existingVendor.serviceAvailable = !existingVendor.serviceAvailable;
 
-            const savedResult = await existingVendor.save();
-            return savedResult
+        const existingVendor = await findVendorById(user._id)
+        if (!existingVendor) {
+            customError(StatusCodes.BAD_REQUEST, messages.VENDOR_NOT_EXIST)
         }
+        if (lat & lng) {
+            existingVendor.lat = lat;
+            existingVendor.lng = lng;
+        }
+        existingVendor.serviceAvailable = !existingVendor.serviceAvailable;
+
+        const savedResult = await existingVendor.save();
+        return savedResult
 
     },
 

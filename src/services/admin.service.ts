@@ -1,6 +1,6 @@
 import { Request } from "express";
 import { CreateVendorInput, VendorLogin } from "../dto";
-import { Vendor } from "../models";
+import { Delivery, Vendor } from "../models";
 import { customError, generatePassword, generateSalt, generateToken, validatePassword } from "../utils";
 import { StatusCodes } from "http-status-codes";
 import { messages } from "../common/constants";
@@ -130,5 +130,39 @@ export const AdminService = {
         }
 
         return transaction
+    },
+
+    /**
+    * Function to verify Delivery User
+    * 
+    * @param req
+    * @returns result
+    */
+    verifyDeliveryUser: async (req: Request) => {
+        const { id, status } = req.body;
+        const profile = await Delivery.findById(id);
+
+        if (!profile) {
+            customError(StatusCodes.BAD_REQUEST, messages.CUSTOMER_NOT_EXISTS);
+        }
+        profile.verified = status;
+        const result = await profile.save();
+        return result;
+    },
+
+    /**
+    * Function to verify Delivery User
+    * 
+    * @param req
+    * @returns profiles
+    */
+    getDeliveryUsers: async (req: Request) => {
+        const profiles = await Delivery.find();
+
+        if (!profiles) {
+            customError(StatusCodes.BAD_REQUEST, messages.CUSTOMER_NOT_EXISTS);
+        }
+
+        return profiles;
     },
 }

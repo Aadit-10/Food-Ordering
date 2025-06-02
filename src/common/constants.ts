@@ -85,4 +85,6 @@ export const messages = {
     DELIVERY_USER_LOGIN_SUCCESS: 'Delivery User Login Success',
     DELIVERY_USER_LOGIN_FAILED: 'Delivery User Login Failed',
     DELIVERY_USER_STATUS_SUCCESS: 'Delivery User Status Update Success',
+    DELIVERY_USER_VERIFIED: 'Delivery User Verified',
+
 }
