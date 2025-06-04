@@ -27,7 +27,7 @@ export const validate = (validations: ContextRunner[]) => {
 export const rules = {
     // Admin Route
     login: [
-        body('email', 'Invalid Email Id.').exists().isEmail(),
+        body('email', 'Invalid Email Id.').exists(),
         body('password', 'Password is required.').exists(),
     ],
     deliverySignup: [
@@ -77,9 +77,9 @@ export const rules = {
             .notEmpty().isNumeric().withMessage('Contact number must be a number'),
     ],
     editCustomerProfile: [
-        body('firstName', 'firstName is required.').exists().notEmpty().withMessage('firstName is required'),
-        body('lastName', 'lastName is required.').exists().notEmpty().withMessage('lastName is required'),
-        body('address', 'address is required.').exists().notEmpty().withMessage('address is required'),
+        body('firstName', 'firstName is required.').exists().notEmpty().withMessage('firstName is required').optional(),
+        body('lastName', 'lastName is required.').exists().notEmpty().withMessage('lastName is required').optional(),
+        body('address', 'address is required.').exists().notEmpty().withMessage('address is required').optional(),
     ],
     updateCart: [
         body('_id', 'Food ID is required').notEmpty().withMessage('Food ID cannot be empty'),
@@ -103,5 +103,52 @@ export const rules = {
         body('items', 'items is required').notEmpty().exists()
     ],
 
-
+    // Vendor Route
+    updateVendor: [
+        body('name', 'Name is required.').exists().notEmpty().withMessage('Name cannot be empty'),
+        body('address', 'Address is required').exists().notEmpty().withMessage('Address cannot be empty'),
+        body('phone', 'Phone is required').exists().notEmpty().withMessage('Phone cannot be empty'),
+        body('foodTypes', 'foodTypes is required.').isArray({ min: 1 })
+            .withMessage('FoodTypes must be a non-empty array')
+            .exists().notEmpty().withMessage('foodTypes is required'),
+    ],
+    updateVendorService: [
+        body('lat', 'lat is required.').exists().notEmpty().withMessage('Latitude cannot be empty'),
+        body('lng', 'lng is required').exists().notEmpty().withMessage('Longitude cannot be empty'),
+    ],
+    addFood: [
+        body('name', 'Name is required.').exists().notEmpty().withMessage('Name cannot be empty'),
+        body('description', 'description is required.').exists().notEmpty().withMessage('Description cannot be empty'),
+        body('foodTypes', 'foodTypes is required.').isArray({ min: 1 })
+            .withMessage('FoodTypes must be a non-empty array')
+            .exists().notEmpty().withMessage('foodTypes is required'),
+        body('readyTime', 'readyTime is required.').exists().notEmpty().withMessage('ReadyTime cannot be empty'),
+        body('price', 'price is required.').exists().notEmpty().withMessage('Price cannot be empty'),
+        body('category', 'category is required.').exists().notEmpty().withMessage('Category cannot be empty'),
+    ],
+    processOrder: [
+        body('status', 'status is required.').exists().notEmpty().withMessage('Status cannot be empty'),
+        body('remarks', 'remarks is required.').exists().notEmpty().withMessage('Remarks cannot be empty'),
+        body('time', 'time is required.').exists().notEmpty().withMessage('Time cannot be empty'),
+    ],
+    addOffer: [
+        body('title', 'title is required.').exists().notEmpty().withMessage('Title cannot be empty'),
+        body('description', 'description is required.').exists().notEmpty().withMessage('Description cannot be empty'),
+        body('offerType', 'offerType is required.').exists().notEmpty().withMessage('OfferType cannot be empty'),
+        body('minValue', 'minValue is required.').exists().notEmpty().withMessage('MinValue cannot be empty'),
+        body('offerAmount', 'offerAmount is required.').exists().notEmpty().withMessage('OfferAmount cannot be empty'),
+        body('promoCode', 'promoCode is required.').exists().notEmpty().withMessage('PromoCode cannot be empty'),
+        body('promoType', 'promoType is required.').exists().notEmpty().withMessage('PromoType cannot be empty'),
+        body('pincode', 'pincode is required.').exists().notEmpty().withMessage('Pincode cannot be empty'),
+    ],
+    editOffer: [
+        body('title', 'title is required.').exists().notEmpty().withMessage('Title cannot be empty').optional(),
+        body('description', 'description is required.').exists().notEmpty().withMessage('Description cannot be empty').optional(),
+        body('offerType', 'offerType is required.').exists().notEmpty().withMessage('OfferType cannot be empty').optional(),
+        body('minValue', 'minValue is required.').exists().notEmpty().withMessage('MinValue cannot be empty').optional(),
+        body('offerAmount', 'offerAmount is required.').exists().notEmpty().withMessage('OfferAmount cannot be empty').optional(),
+        body('promoCode', 'promoCode is required.').exists().notEmpty().withMessage('PromoCode cannot be empty').optional(),
+        body('promoType', 'promoType is required.').exists().notEmpty().withMessage('PromoType cannot be empty').optional(),
+        body('pincode', 'pincode is required.').exists().notEmpty().withMessage('Pincode cannot be empty').optional(),
+    ],
 }

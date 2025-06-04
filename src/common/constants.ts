@@ -6,6 +6,7 @@ export const messages = {
     SOMETHING_WENT_WRONG: 'Something went Wrong',
     DATA_NOT_FOUND: 'Data not Found',
     CONFIRMED: 'Confirmed',
+    IMAGE_REQUIRED: 'Images are required',
 
     // Vendor
     LOGIN_VENDOR: 'Vendor Login Succesfully.',
