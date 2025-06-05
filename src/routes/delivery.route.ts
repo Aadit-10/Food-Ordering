@@ -1,20 +1,20 @@
 import { Router } from "express";
 import {
-    DeliveryUserLogin, DeliveryUserSignup, EditCustomerProfile,
+    DeliveryUserLogin, DeliveryUserSignup,
     EditDeliveryUserProfile,
-    GetCustomerProfile, GetDeliveryUserProfile, UpdateDeliveryUserStatus,
+    GetDeliveryUserProfile, UpdateDeliveryUserStatus,
 } from "../controllers";
-import { Authenticate } from "../middlewares";
+import { Authenticate, rules, validate } from "../middlewares";
 
 const router = Router();
 
 /**---------------- SignUp/ Create Customer ---------------- **/
 
-router.post('/signup', DeliveryUserSignup);
+router.post('/signup', validate(rules.deliverySignup), DeliveryUserSignup);
 
 /**---------------- Login ---------------- **/
 
-router.post('/login', DeliveryUserLogin);
+router.post('/login', validate(rules.login), DeliveryUserLogin);
 
 
 // Authenticate
@@ -22,12 +22,11 @@ router.use(Authenticate)
 
 /**---------------- Change Service Status ---------------- **/
 
-router.put('/change-status', UpdateDeliveryUserStatus);
+router.put('/change-status', validate(rules.updateDeliveryUserStatus), UpdateDeliveryUserStatus);
 
 /**---------------- Profile ---------------- **/
 
 router.get('/profile', GetDeliveryUserProfile);
-router.patch('/editProfile', EditDeliveryUserProfile);
-
+router.patch('/editProfile', validate(rules.editDeliveryUserProfile), EditDeliveryUserProfile);
 
 export default router;

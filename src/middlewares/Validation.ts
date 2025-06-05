@@ -151,4 +151,24 @@ export const rules = {
         body('promoType', 'promoType is required.').exists().notEmpty().withMessage('PromoType cannot be empty').optional(),
         body('pincode', 'pincode is required.').exists().notEmpty().withMessage('Pincode cannot be empty').optional(),
     ],
+
+    // Delivery Route
+    updateDeliveryUserStatus: [
+        body('lat', 'lat is required.').exists().notEmpty().withMessage('Latitude cannot be empty'),
+        body('lng', 'lng is required').exists().notEmpty().withMessage('Longitude cannot be empty'),
+    ],
+    editDeliveryUserProfile: [
+        body('firstName', 'firstName is required').exists().notEmpty().withMessage('FirstName cannot be empty'),
+        body('lastName', 'lastName is required').exists().notEmpty().withMessage('LastName cannot be empty'),
+        body('address', 'address is required').exists().notEmpty().withMessage('Address cannot be empty'),
+    ],
+
+    // Shopping Route
+    getTopRestaurants: [
+        check('limit', 'limit is required').exists().notEmpty().withMessage('limit cannot be empty'),
+    ],
+    getFoodIn30Min: [
+        check('readyTime', 'readyTime is required').exists().notEmpty().withMessage('readyTime cannot be empty')
+            .isNumeric().withMessage('Ready Time must be a number'),
+    ],
 }
