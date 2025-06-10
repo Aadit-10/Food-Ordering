@@ -1,7 +1,7 @@
 import { Request } from "express";
 import { CreateOfferInput, CreateVendorInput, EditVendorInput, VendorLogin } from "../dto";
 import { Food, Offer, Vendor } from "../models";
-import { customError, generateToken, validatePassword } from "../utils";
+import { customError, generateToken, getPaginationParams, paginate, validatePassword } from "../utils";
 import { StatusCodes } from "http-status-codes";
 import { messages } from "../common/constants";
 import { createFoodInput } from "../dto/Food.dto";
@@ -251,15 +251,25 @@ export const VendorService = {
     */
     GetOffers: async (req: Request) => {
         const user = req.user;
+        const { page, limit, skip } = getPaginationParams(req);
 
         const offers = await Offer.find({ isActive: true }).populate('vendors');
         const currentOffers = offers.filter(offer => {
             if (offer.offerType === 'GENERIC') return true;
-
             return offer.vendors?.some(vendor => vendor._id.toString() === user._id);
         });
 
-        return currentOffers
+        const paginatedOffers = currentOffers.slice(skip, skip + limit);
+
+        let totalItems: number = currentOffers.length;
+        let totalPages: number = Math.ceil(totalItems / limit);
+
+        return {
+            items: paginatedOffers,
+            totalItems,
+            totalPages,
+            currentPage: page
+        }
     },
 
     /**

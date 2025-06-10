@@ -2,7 +2,7 @@ import { plainToClass } from "class-transformer";
 import { Request } from "express";
 import { CartItem, createCustomerInputs, EditCustomerProfileInputs, OrderInputs, UserLoginInputs, } from "../dto";
 import { validate } from "class-validator";
-import { customError, GenerateOtp, generatePassword, generateSalt, generateToken, validatePassword } from "../utils";
+import { customError, GenerateOtp, generatePassword, generateSalt, generateToken, getPaginationParams, validatePassword } from "../utils";
 import { StatusCodes } from "http-status-codes";
 import { messages } from "../common/constants";
 import { Customer, Delivery, Food, Offer, Order, Transcation, Vendor } from "../models";
@@ -337,11 +337,15 @@ export const CustomerService = {
         if (!profile) {
             customError(StatusCodes.BAD_REQUEST, messages.CUSTOMER_NOT_EXISTS)
         }
-        const orders = await Order.find({ _id: { $in: profile.orders } })
-            .sort({ createdAt: -1 }).populate('items.food');
+        const { limit, skip } = getPaginationParams(req);
 
-        // add pagination here
-        return orders
+        const orders = await Order.find({ _id: { $in: profile.orders } })
+            .sort({ createdAt: -1 }).populate('items.food').limit(limit).skip(skip);
+
+        const totalItems = await Order.countDocuments({ _id: { $in: profile.orders } });
+        let totalPages: number = Math.ceil(totalItems / limit);
+        const OrderList = { orders, totalItems, totalPages };
+        return OrderList
     },
 
     /**

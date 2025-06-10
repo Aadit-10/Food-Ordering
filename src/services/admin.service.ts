@@ -1,7 +1,7 @@
 import { Request } from "express";
 import { CreateVendorInput, VendorLogin } from "../dto";
 import { Delivery, Vendor } from "../models";
-import { customError, generatePassword, generateSalt, generateToken, validatePassword } from "../utils";
+import { customError, generatePassword, generateSalt, generateToken, getPaginationParams, paginate, validatePassword } from "../utils";
 import { StatusCodes } from "http-status-codes";
 import { messages } from "../common/constants";
 import { Transcation } from "../models/transaction.model";
@@ -66,21 +66,27 @@ export const AdminService = {
      */
     getVendors: async (req: Request) => {
         const searchText: any = req.query.search || '';
-        let page = (req.query.page) ? parseInt(req.query.page as string) : 1;
-        let limit = (req.query.limit) ? parseInt(req.query.limit as string) : 10;
+        const { page, limit, skip } = getPaginationParams(req);
 
         const query: any = {
             name: { $regex: searchText, $options: 'i' },
             status: { $ne: messages.DELETED_STATUS }
         }
-        let skip = (page - 1) * limit;
 
-        let allVendors = await Vendor.find(query).
-            sort({ createdAt: -1 }).limit(limit).skip(skip);
+        // let allVendors = await Vendor.find(query).
+        //     sort({ createdAt: -1 }).limit(limit).skip(skip);
 
-        let totalItems: number = await Vendor.countDocuments(query);
-        let totalPages: number = Math.ceil(totalItems / limit);
-        const VendorsList = { allVendors, totalItems, totalPages };
+        // let totalItems: number = await Vendor.countDocuments(query);
+        // let totalPages: number = Math.ceil(totalItems / limit);
+        // const VendorsList = { allVendors, totalItems, totalPages };
+
+        const VendorsList = await paginate({
+            model: Vendor,
+            query,
+            page,
+            limit,
+            sort: { createdAt: -1 }
+        });
 
         return VendorsList;
     },
@@ -107,7 +113,13 @@ export const AdminService = {
     * @returns vendor
     */
     getTransactions: async (req: Request) => {
-        const transactions = await Transcation.find();
+        const { page, limit, skip } = getPaginationParams(req);
+        const transactions = await paginate({
+            model: Transcation,
+            page,
+            limit,
+            sort: { createdAt: -1 }
+        });
         if (!transactions) {
             customError(StatusCodes.BAD_REQUEST, messages.TRANSACTION_NOT_FOUND)
         }
