@@ -111,4 +111,18 @@ export const UpdateDeliveryUserStatus = async (req: Request, res: Response): Pro
     }
 };
 
+/**
+ * Function for Editing DeliveryUser Profile
+ *
+ * @param req
+ * @param res
+ */
+export const UpdateFoodStatus = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const result = await DeliveryService.updateFoodStatus(req);
+        return sendResponse(res, StatusCodes.OK, messages.DELIVERY_USER_STATUS_SUCCESS, { result });
+    } catch (error) {
+        return sendResponse(res, error.statusCode, error.message)
+    }
+};
 

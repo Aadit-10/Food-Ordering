@@ -3,6 +3,7 @@ import {
     DeliveryUserLogin, DeliveryUserSignup,
     EditDeliveryUserProfile,
     GetDeliveryUserProfile, UpdateDeliveryUserStatus,
+    UpdateFoodStatus,
 } from "../controllers";
 import { Authenticate, rules, validate } from "../middlewares";
 
@@ -28,5 +29,7 @@ router.put('/change-status', validate(rules.updateDeliveryUserStatus), UpdateDel
 
 router.get('/profile', GetDeliveryUserProfile);
 router.patch('/editProfile', validate(rules.editDeliveryUserProfile), EditDeliveryUserProfile);
+
+router.post('/updateFoodStatus', UpdateFoodStatus);
 
 export default router;

@@ -3,7 +3,7 @@ import { createDeliveryUserInputs, EditCustomerProfileInputs, UserLoginInputs } 
 import { customError, generatePassword, generateSalt, generateToken, validatePassword } from "../utils";
 import { StatusCodes } from "http-status-codes";
 import { messages } from "../common/constants";
-import { Delivery } from "../models";
+import { Delivery, Order } from "../models";
 
 
 export const DeliveryService = {
@@ -132,6 +132,28 @@ export const DeliveryService = {
 
         const result = await profile.save();
         return result
+    },
+
+    /**
+    * Function for Updating Food Delivery Status
+    *
+    * @param req
+    * @returns
+    */
+    updateFoodStatus: async (req: Request) => {
+        const user = req.user;
+        const profile = await Delivery.findById(user._id);
+        if (!profile) {
+            customError(StatusCodes.BAD_REQUEST, messages.CUSTOMER_NOT_EXISTS)
+        }
+
+        const { orderId, orderStatus, lat, lng } = req.body;
+
+        const order = await Order.findById(orderId);
+        order.orderStatus = orderStatus;
+
+        const orderDetails = await order.save();
+        return orderDetails
     },
 
 }
